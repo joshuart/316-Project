@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Duke Book Exchange</title>
+    
+    
+        <link rel="stylesheet" href="{{STATIC_URL}}books/css/style.css">
+    {% block script %}{% endblock %}
+  </head>
+
+  <body>
+  	<hr/>
+    <div class="wrapper">
+	<div class="container">
+		<h1>Duke Book Exchange</h1>
+		<h2 id="heading">{% block heading %}{% endblock %}</h2>
+		
+<!-- 		<form class="form" method = "post">
+			<button type="submit" id="login-button">Sell a Book</button>
+			<button type="submit" id="view-button">Buy a Book</button>
+		</form> -->
+		
+	{% block login %}{% endblock %}
+
+	</div>
+	
+	<ul class="bg-bubbles">
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+	</ul>
+</div>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+        <script src="{{STATIC_URL}}books/js/base.js"></script>
+
+    
+    
+  <hr/> 
+  </body>
+</html>
