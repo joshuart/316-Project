@@ -1,0 +1,11 @@
+Progress Report:
+
+	Project Description:
+		We are designing a website where Duke students can sell their textbooks after they’re finished using them. The website will allow users to list their textbooks with the option to either sell the books at auction or for a simple list price or both. Buyers will be able to communicate with each other via email to arrange to sell their books. In order to insure that our listings are up to date. We will automatically remove listings after a short period of time. 
+
+
+
+
+
+	Description of web interface:
+		Users will come to page where they can either choose to post a book or view books that have been listed. In order to post a book a user must first register with the website. When posting a book users can choose whether to list their book as an auction or with a buy-it-now option or both. Visitors to the website must sign in order to purchase a book. When browsing for books users will be able to search for books by choosing departments and course numbers from a drop-down menu, which will then display the view for their search. When purchasing a book users will correspond with each other via email address. 
