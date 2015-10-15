@@ -1,3 +1,4 @@
+-- check
 CREATE TABLE User
 (
 name VARCHAR(256) NOT NULL,
