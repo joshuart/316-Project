@@ -1,4 +1,7 @@
 Daniel MacDonald
 Joshua Taylor - I started writing up the python code for our website.
 Tianyi Wang
+  Duties: Design E/R Model; Write SQL Code; Plot E/R Graph
 Xiaoxian (Evelyn) Wu
+  Duties: Write SQL Code
+  
