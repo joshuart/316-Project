@@ -1,0 +1,115 @@
+CREATE TABLE User
+(
+name VARCHAR(256) NOT NULL,
+email VARCHAR(256) NOT NULL UNIQUE PRIMARY KEY,
+phoneNumber VARCHAR(256) NOT NULL UNIQUE,
+major VARCHAR(256) 
+CONSTRAINT email CHECK(email = '%@duke.edu' OR email = '%@duke.%.edu')
+);
+
+CREATE TABLE Bid
+(
+date_time TIMESTAMP NOT NULL,
+bid_price SMALLMONEY NOT NULL,
+CONSTRAINT bid_price CHECK(bid_price >= 0)
+bid_user_email VARCHAR(256) NOT NULL
+    REFERENCES User(email),
+bid_ISBN VARCHAR(256) NOT NULL
+    REFERENCES Book(ISBN),
+bid_seller_email VARCHAR(256) NOT NULL
+    REFERENCES Book(seller_email),
+bid_post_time TIMESTAMP NOT NULL
+    REFERENCES Book(post_time),
+PRIMARY KEY (bid_user_email, date_time, bid_ISBN, bid_seller_email, bid_post_time)
+);
+
+CREATE TABLE Book
+(
+title VARCHAR(256) NOT NULL,
+ISBN VARCHAR(256) NOT NULL,
+description VARCHAR(256),
+condition VARCHAR(256) NOT NULL,
+professor VARCHAR(256),
+price SMALLMONEY NOT NULL,
+course VARCHAR(256),
+edition INTEGER NOT NULL,
+is_auction BOOLEAN,
+is_buy_it_now BOOLEAN,
+start_price SMALLMONEY,
+buy_it_now_price SMALLMONEY,
+display boolean,
+seller_email VARCHAR(256) NOT NULL
+    REFERENCES User(email),
+post_time TIMESTAMP NOT NULL,
+PRIMARY KEY(ISBN, seller_email, post_time),
+CONSTRAINT condition CHECK(condition in ('new','like-new','used and good','used and poor'),
+CONSTRAINT start_price CHECK((is_auction = true AND start_price >=0) OR (is_auction = false AND start_price IS NULL)),
+CONSTRAINT buy_it_now_price CHECK((is_buy_it_now = true AND buy_it_now_price >= 0) OR (is_buy_it_now = false AND buy_it_now_price IS NULL))
+);
+
+CREATE FUNCTION non_auction_no_more_than_three_days() RETURNS TRIGGER AS $$
+BEGIN
+  IF EXISTS(SELECT * FROM Book WHERE age(clock_timestamp, post_time) > 3 days AND display = true AND is_auction = false) THEN
+    UPDATE Book
+    SET display = false;
+  --then send the seller an nofitication email, now I don't know how to do it
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER non_auction_no_more_than_three_days
+  BEFORE INSERT OR UPDATE ON Book
+  FOR EACH STATEMENT
+  EXECUTE PROCEDURE no_more_than_three_days();
+
+CREATE FUNCTION current_bid_is_valid() RETURNS TRIGGER AS $$
+BEGIN
+  IF EXISTS(SELECT * FROM Bid WHERE new.bid_ISBN=Books.ISBN AND new.bid_seller_email=Books.seller_email AND new.bid_post_time = Books.post_time AND old.bid_price >= new.bid_price) THEN
+  RAISE EXCEPTION 'Must Place a Bid with Price Higher Than the Current Bid';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER current_bid_is_valid
+  BEFORE INSERT OR UPDATE ON Bid
+  FOR EACH ROW
+  EXECUTE PROCEDURE current_bid_is_valid();
+
+CREATE FUNCTION bidding_start() RETURNS TRIGGER AS $$
+BEGIN
+  IF (SELECT bid_price FROM Bid WHERE new.bid_ISBN=Books.ISBN AND new.bid_seller_email=Books.seller_email AND new.bid_post_time = Books.post_time) IS NOT NULL THEN
+    UPDATE Book
+    SET is_buy_it_now = false,
+        buy_it_now_price = NULL;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER bidding_start
+  BEFORE INSERT OR UPDATE ON Bid
+  FOR EACH STATEMENT
+  EXECUTE PROCEDURE bidding_start();
+
+-- Note: 
+-- 1. some books might be copies of official edition books, so ISBN can no longer be part of a key.
+-- 2. I added one more attribute "display" to book. When display = true, then that record remains visible on the website. When display = false, we still have this record in the database, but people can't see it on the website. When a book has passed the three-day window period, we turn display to false. When this seller wants to renew it, we turn display back to true.
+-- 3. I'm not sure whether "age(clock_timestamp, post_time) > 3 days" is a valid argument or not.
+-- 4. I'm not sure whether sql will fire the trigger every second (that's not a good idea). I don't know how to handle the trigger's timing part.
+-- 5. A single user can only place one bid at one time.
+-- 6. When is_auction is true, a start_price is required to be valid (non-negative).
+-- 7. When is_buy_it_now is true, a buy_it_now_price is required to be valid (non-negative).
+-- 8. To place a bid, the input bidding price must be higher than the current bidding price.
+-- 9. Once bidding process starts, the buy_it_now loses its function.
+
+-- Some initial sample data to play with.
+INSERT INTO User VALUES("John Cao", "john.cao@duke.edu", "970-820-3309", "Economics and Statistics");
+INSERT INTO User VALUES("Bill Wang", "bill.wang@duke.edu", "970-820-3306", "Finance");
+INSERT INTO User VALUES("Iris Liu", "iris.liu@duke.edu", "970-820-2927", "Economics");
+INSERT INTO User VALUES("Evelyn Wu", "evelyn.wu@duke.edu", "720-771-5337", "Economics and Computer Science");
+INSERT INTO User VALUES("Will Wang", "will.wang@duke.edu", "970-820-3302", "Economics");
+
+INSERT INTO Bid VALUES(2015-10-08-29.35.01.021031, 20.0000, "johnancy.kersky@duke.edu", "0684843285", "evelyn.wu@duke.edu", 2015-10-06-07.06.01.121032,32.0991);
+INSERT INTO Bid VALUES(2015-10-011-02.05.21.111031, 15.0000, "jake.guo@duke.edu", "1843560283", "bill.wang@duke.edu", 2015-10-10-06.01.11.120032,32.0980);
+
+INSERT INTO Book VALUES("Database Systems: The Complete Book","0684843285", NULL, "like-new", "Jun Yang", 20.0000, "CS316", 2, false, true, NULL, 20.0000, true, evelyn.wu@duke.edu, CURRENT_TIMESTAMP);
