@@ -92,15 +92,16 @@ CREATE TRIGGER bidding_start
   EXECUTE PROCEDURE bidding_start();
 
 -- Note: 
--- 1. some books might be copies of official edition books, so ISBN can no longer be part of a key.
--- 2. I added one more attribute "display" to book. When display = true, then that record remains visible on the website. When display = false, we still have this record in the database, but people can't see it on the website. When a book has passed the three-day window period, we turn display to false. When this seller wants to renew it, we turn display back to true.
--- 3. I'm not sure whether "age(clock_timestamp, post_time) > 3 days" is a valid argument or not.
--- 4. I'm not sure whether sql will fire the trigger every second (that's not a good idea). I don't know how to handle the trigger's timing part.
--- 5. A single user can only place one bid at one time.
--- 6. When is_auction is true, a start_price is required to be valid (non-negative).
--- 7. When is_buy_it_now is true, a buy_it_now_price is required to be valid (non-negative).
--- 8. To place a bid, the input bidding price must be higher than the current bidding price.
--- 9. Once bidding process starts, the buy_it_now loses its function.
+-- 1. Some books might be copies of official edition books, so ISBN can no longer be part of a key.
+-- 2. An attribute "display" is added to book. When display = true, then that record remains visible on the website. 
+--    When display = false, we still have this record in the database, but people can't see it on the website. 
+--    When a book has passed the three-day window period, display is turned to false. 
+--    When this seller wants to renew it, display is turned back to true.
+-- 3. A single user can only place one bid at one time.
+-- 4. When is_auction is true, a start_price is required to be valid (non-negative).
+-- 5. When is_buy_it_now is true, a buy_it_now_price is required to be valid (non-negative).
+-- 6. To place a bid, the input bidding price must be higher than the current bidding price.
+-- 7. Once bidding process starts, the buy_it_now loses its function.
 
 -- Some initial sample data to play with.
 INSERT INTO User VALUES("John Cao", "john.cao@duke.edu", "970-820-3309", "Economics and Statistics");
@@ -108,8 +109,6 @@ INSERT INTO User VALUES("Bill Wang", "bill.wang@duke.edu", "970-820-3306", "Fina
 INSERT INTO User VALUES("Iris Liu", "iris.liu@duke.edu", "970-820-2927", "Economics");
 INSERT INTO User VALUES("Evelyn Wu", "evelyn.wu@duke.edu", "720-771-5337", "Economics and Computer Science");
 INSERT INTO User VALUES("Will Wang", "will.wang@duke.edu", "970-820-3302", "Economics");
-
 INSERT INTO Bid VALUES(2015-10-08-29.35.01.021031, 20.0000, "johnancy.kersky@duke.edu", "0684843285", "evelyn.wu@duke.edu", 2015-10-06-07.06.01.121032,32.0991);
 INSERT INTO Bid VALUES(2015-10-011-02.05.21.111031, 15.0000, "jake.guo@duke.edu", "1843560283", "bill.wang@duke.edu", 2015-10-10-06.01.11.120032,32.0980);
-
 INSERT INTO Book VALUES("Database Systems: The Complete Book","0684843285", NULL, "like-new", "Jun Yang", 20.0000, "CS316", 2, false, true, NULL, 20.0000, true, evelyn.wu@duke.edu, CURRENT_TIMESTAMP);
