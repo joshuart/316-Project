@@ -14,13 +14,13 @@ bid_price SMALLMONEY NOT NULL,
 CONSTRAINT bid_price CHECK(bid_price >= 0)
 bid_user_email VARCHAR(256) NOT NULL
     REFERENCES User(email),
-bid_ISBN VARCHAR(256) NOT NULL
+book_ISBN VARCHAR(256) NOT NULL
     REFERENCES Book(ISBN),
-bid_seller_email VARCHAR(256) NOT NULL
+book_seller_email VARCHAR(256) NOT NULL
     REFERENCES Book(seller_email),
-bid_post_time TIMESTAMP NOT NULL
+book_post_time TIMESTAMP NOT NULL
     REFERENCES Book(post_time),
-PRIMARY KEY (bid_user_email, date_time, bid_ISBN, bid_seller_email, bid_post_time)
+PRIMARY KEY (bid_user_email, date_time, book_ISBN, book_seller_email, book_post_time)
 );
 
 CREATE TABLE Book
@@ -52,7 +52,7 @@ BEGIN
   IF EXISTS(SELECT * FROM Book WHERE age(clock_timestamp, post_time) > 3 days AND display = true AND is_auction = false) THEN
     UPDATE Book
     SET display = false;
-  --then send the seller an nofitication email, now I don't know how to do it
+    --then send the seller an nofitication email
   END IF;
 END;
 $$ LANGUAGE plpgsql;
@@ -64,7 +64,7 @@ CREATE TRIGGER non_auction_no_more_than_three_days
 
 CREATE FUNCTION current_bid_is_valid() RETURNS TRIGGER AS $$
 BEGIN
-  IF EXISTS(SELECT * FROM Bid WHERE new.bid_ISBN=Books.ISBN AND new.bid_seller_email=Books.seller_email AND new.bid_post_time = Books.post_time AND old.bid_price >= new.bid_price) THEN
+  IF EXISTS(SELECT * FROM Bid WHERE new.book_ISBN=Books.ISBN AND new.book_seller_email=Books.seller_email AND new.book_post_time = Books.post_time AND old.bid_price >= new.bid_price) THEN
   RAISE EXCEPTION 'Must Place a Bid with Price Higher Than the Current Bid';
   END IF;
   RETURN NEW;
@@ -78,7 +78,7 @@ CREATE TRIGGER current_bid_is_valid
 
 CREATE FUNCTION bidding_start() RETURNS TRIGGER AS $$
 BEGIN
-  IF (SELECT bid_price FROM Bid WHERE new.bid_ISBN=Books.ISBN AND new.bid_seller_email=Books.seller_email AND new.bid_post_time = Books.post_time) IS NOT NULL THEN
+  IF (SELECT bid_price FROM Bid WHERE new.book_ISBN=Books.ISBN AND new.book_seller_email=Books.seller_email AND new.book_post_time = Books.post_time) IS NOT NULL THEN
     UPDATE Book
     SET is_buy_it_now = false,
         buy_it_now_price = NULL;
