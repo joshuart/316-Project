@@ -13,10 +13,24 @@ from django.contrib.auth.forms import UserCreationForm
 
 def index(request):
 	# return HttpResponse("Welcome to Duke's Book Exchange")
-	return render_to_response('books/base.html',
+	return render_to_response('books/index.html',
 		{}, 
 		context_instance=RequestContext(request))
 
+
+def register(request):
+	return HttpResponse("Please finish the registration page")
+	# return render_to_response('books/login.html',
+	# 	{},
+	# 	context_instance = RequestContext(request))
+
+
+
+def login(request):
+	return HttpResponse("Please finish the login page")
+	# return render_to_response('books/login.html',
+	# 	{},
+	# 	context_instance = RequestContext(request))
 
 def list(request):
 	return HttpResponse("Welcome to the list page")

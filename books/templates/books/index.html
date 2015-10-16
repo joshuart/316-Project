@@ -2,7 +2,14 @@
 
 {% block heading %}Welcome to Duke Book Exchange{% endblock %}
 {% block login %}{% endblock %}
-{% block content %}{% endblock %}
+{% block content %}
+
+	<form class="form" method = "post">
+			<button type="submit" id="login-button" href = "{% url 'books.views.register' %}">Sell a Book</button>
+			<button type="submit" id="view-button" href = "{% url 'books.views.login' %}">Buy a Book</button>
+	</form> 
+
+{% endblock %}
 
 
 
