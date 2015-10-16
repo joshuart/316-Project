@@ -3,5 +3,5 @@ Joshua Taylor
 Tianyi Wang
   Duties: Design E/R Model; Write SQL Code; Plot E/R Graph
 Xiaoxian (Evelyn) Wu
-  Duties: Write SQL Code
+  Duties: Design E/R Model; Develop SQL Code
   
