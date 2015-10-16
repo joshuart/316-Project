@@ -14,13 +14,13 @@ bid_price SMALLMONEY NOT NULL,
 CONSTRAINT bid_price CHECK(bid_price >= 0)
 bid_user_email VARCHAR(256) NOT NULL
     REFERENCES User(email),
-bid_ISBN VARCHAR(256) NOT NULL
+book_ISBN VARCHAR(256) NOT NULL
     REFERENCES Book(ISBN),
-bid_seller_email VARCHAR(256) NOT NULL
+book_seller_email VARCHAR(256) NOT NULL
     REFERENCES Book(seller_email),
-bid_post_time TIMESTAMP NOT NULL
+book_post_time TIMESTAMP NOT NULL
     REFERENCES Book(post_time),
-PRIMARY KEY (bid_user_email, date_time, bid_ISBN, bid_seller_email, bid_post_time)
+PRIMARY KEY (bid_user_email, date_time, book_ISBN, book_seller_email, book_post_time)
 );
 
 CREATE TABLE Book
