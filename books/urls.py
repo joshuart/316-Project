@@ -17,6 +17,7 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('books.views',
 	url(r'^$', 'index', name = 'index'),
+    url(r'^nav$', 'navigation', name = 'navigation'),
 	url(r'^all-books$', 'all_books', name = 'all_books'),
 	url(r'^list$', 'list'),
     url(r'^login$', 'login'),

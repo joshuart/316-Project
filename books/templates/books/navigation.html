@@ -1,0 +1,13 @@
+{% extends "books/base.html" %}
+
+{% block heading %}You're in! What would you like to do?{% endblock %}
+{% block login %}{% endblock %}
+{% block content %}
+
+	<form class="form" method = "post">
+	  {% csrf_token %} <!-- I'm not sure if this is necessary -->
+			<li><a href="{% url 'books.views.all_books' %}">View Books</a></li>
+			<li><a href="{% url 'books.views.list' %}">Sell a Book</a></li>
+	</form> 
+
+{% endblock %}

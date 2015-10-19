@@ -1,12 +1,13 @@
 from django.db import models
 
 class User(models.Model):
-	"""Seller relation stores the relavant information about the seller's name and contact information"""
+	"""User relation stores the relavant information about the user's name and contact information"""
 	username = models.CharField(max_length = 200)
 	first_name = models.CharField(max_length = 200, null = True)
 	last_name = models.CharField(max_length = 200, null = True)
 	email = models.EmailField(max_length = 200)
-	password = models.CharField(max_length = 200)
+	password1 = models.CharField(max_length = 200)
+	password2 = models.CharField(max_length = 200)
 	class Meta:
 		db_table = u'user'
 

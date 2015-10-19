@@ -10,6 +10,8 @@ from django.forms.models import ModelForm, inlineformset_factory
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+import pytz
+import datetime
 
 
 def index(request):
@@ -23,6 +25,9 @@ def register(request):
 	# return HttpResponse("Please finish the registration page")
 	if request.method == 'POST':
 		form = UserCreateForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect(reverse('books.views.navigation'))
 	else:
 		form = UserCreateForm()
 	return render_to_response('books/register.html',
@@ -30,6 +35,9 @@ def register(request):
 		context_instance = RequestContext(request))
 
 
+def logout(request):
+	auth_logout(request)
+	return HttpResponseRedirect(reverse('books.views.index'))
 
 def login(request):
 	# return HttpResponse("Please finish the login page")
@@ -37,11 +45,35 @@ def login(request):
 		{},
 		context_instance = RequestContext(request))
 
+
+
+
+class ListBookForm(ModelForm):
+	class Meta:
+		model = Book
+		exclude('post_date', 'seller_email',)
+
+
+
+@login_required(login_url = reverse_lazy('books.views.login'))
 def list(request):
-	return HttpResponse("Welcome to the list page")
-	# return render_to_response('books/list.html',
-	# 	{}, 
-	# 	context_instance=RequestContext(request))
+	listForm = ListBookForm(request.POST)
+	listing = listForm.save(commit = False)
+	listing.seller_email = "I don't know" # How do I fix this to grab the users email?
+	tz = pytz.timezone('EST')
+	listing.post_date = datetime.datetime.now(tz)
+	return HttpResponseRedirect(reverse('books.views.all_books'))
+
+
+	# return HttpResponse("Welcome to the list page")
+
+
+def navigation(request):
+	return render_to_response('books/navigation.html',
+		{},
+		context_instance=RequestContext(request))
+
+
 
 def all_books(request):
 	return HttpResponse("Welcome to the all-books page")
