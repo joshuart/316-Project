@@ -20,6 +20,7 @@ urlpatterns = patterns('books.views',
 	url(r'^all-books$', 'all_books', name = 'all_books'),
 	url(r'^list$', 'list'),
     url(r'^login$', 'login'),
+    url(r'^register$', 'register'),
 
 
 	)

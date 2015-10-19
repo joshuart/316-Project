@@ -5,8 +5,11 @@
 {% block content %}
 
 	<form class="form" method = "post">
-			<button type="submit" id="login-button" href = "{% url 'books.views.register' %}">Sell a Book</button>
-			<button type="submit" id="view-button" href = "{% url 'books.views.login' %}">Buy a Book</button>
+	  {% csrf_token %} <!-- I'm not sure if this is necessary -->
+			<!-- <button type="submit" id="login-button" href = "{% url 'books.views.register' %}">Sell a Book</button>
+			<button type="submit" id="view-button" href = "{% url 'books.views.login' %}">Buy a Book</button> -->
+			<li><a href="{% url 'books.views.login' %}">Login</a></li>
+			<li><a href="{% url 'books.views.register' %}">Register</a></li>
 	</form> 
 
 {% endblock %}

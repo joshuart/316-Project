@@ -1,14 +1,33 @@
 {% extends "books/base.html" %}
 
-{% block heading %}Welcome to Duke Book Exchange{% endblock %}
+{% block heading %}Login{% endblock %}
 {% block login %}{% endblock %}
+
 {% block content %}
 
-	<form id = "user_form" class="form" method = "post"> 
-		{% csrf_token %}
-			<input type="username" placeholder="your_address@duke.edu">
-			<input type="password" placeholder="Password">
-			<button type="submit" id="login-button" href = "{% url 'books.views.list' %}">Login</button>
-		</form>
+
+
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+{% csrf_token %}
+<table>
+<tr>
+    <td>{{ form.username.label_tag }}</td>
+    <td>{{ form.username }}</td>
+</tr>
+<tr>
+    <td>{{ form.password.label_tag }}</td>
+    <td>{{ form.password }}</td>
+</tr>
+</table>
+
+<input type="submit" value="login" />
+<input type="hidden" name="next" value="{{next}}" />
+</form>
+
+<p>
+Don't have an account?
+Please <a href="{% url 'books.views.register' %}">register</a>!
+</p>
+
 
 {% endblock %}

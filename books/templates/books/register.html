@@ -1,16 +1,12 @@
 {% extends "books/base.html" %}
 
-{% block heading %}Welcome to Duke Book Exchange{% endblock %}
+{% block heading %}User Registration{% endblock %}
 {% block login %}{% endblock %}
+
 {% block content %}
-
-	<form id = "user_form" class="form" method = "post"> 
-		{% csrf_token %}
-			<input type="text" placeholder="first name">
-			<input type="text" placeholder="last name">
-			<input type="username" placeholder="your_address@duke.edu">
-			<input type="password" placeholder="Password">
-			<button type="submit" id="login-button" href = "{% url 'books.views.list' %}">Create Account</button>
-		</form>
-
+<form action="" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Register">
+</form>
 {% endblock %}

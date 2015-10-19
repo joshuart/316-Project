@@ -4,7 +4,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from books.models import Seller, Book
+from books.models import User, Book
+from books.forms import UserCreateForm
 from django.forms.models import ModelForm, inlineformset_factory
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
@@ -19,18 +20,22 @@ def index(request):
 
 
 def register(request):
-	return HttpResponse("Please finish the registration page")
-	# return render_to_response('books/login.html',
-	# 	{},
-	# 	context_instance = RequestContext(request))
+	# return HttpResponse("Please finish the registration page")
+	if request.method == 'POST':
+		form = UserCreateForm(request.POST)
+	else:
+		form = UserCreateForm()
+	return render_to_response('books/register.html',
+		{ 'form':form, }, 
+		context_instance = RequestContext(request))
 
 
 
 def login(request):
-	return HttpResponse("Please finish the login page")
-	# return render_to_response('books/login.html',
-	# 	{},
-	# 	context_instance = RequestContext(request))
+	# return HttpResponse("Please finish the login page")
+	return render_to_response('books/login.html',
+		{},
+		context_instance = RequestContext(request))
 
 def list(request):
 	return HttpResponse("Welcome to the list page")
