@@ -10,6 +10,9 @@ from django.forms.models import ModelForm, inlineformset_factory
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import views
+from django.contrib import auth
 # import pytz
 import datetime
 
@@ -40,7 +43,17 @@ def logout(request):
 	return HttpResponseRedirect(reverse('books.views.index'))
 
 def login(request):
-	# return HttpResponse("Please finish the login page")
+	# username = request.POST['username']
+	# password = request.POST['password']
+	# user = auth.authenticate(username = username, password = password)
+	# if user is not None and user.is_active:
+	# 	auth_login(request, user)
+	# 	return HttpResponseRedirect('books.views.navigation')
+	# else: 
+	# 	return HttpResponse("Your credentials don't match any accounts")
+
+
+
 	return render_to_response('books/login.html',
 		{},
 		context_instance = RequestContext(request))
