@@ -10,7 +10,7 @@ from django.forms.models import ModelForm, inlineformset_factory
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-import pytz
+# import pytz
 import datetime
 
 
@@ -51,7 +51,7 @@ def login(request):
 class ListBookForm(ModelForm):
 	class Meta:
 		model = Book
-		exclude('post_date', 'seller_email',)
+		exclude = ('post_date', 'seller_email',)
 
 
 
@@ -60,8 +60,9 @@ def list(request):
 	listForm = ListBookForm(request.POST)
 	listing = listForm.save(commit = False)
 	listing.seller_email = "I don't know" # How do I fix this to grab the users email?
-	tz = pytz.timezone('EST')
-	listing.post_date = datetime.datetime.now(tz)
+	
+	# tz = pytz.timezone('EST')
+	# listing.post_date = datetime.datetime.now(tz)
 	return HttpResponseRedirect(reverse('books.views.all_books'))
 
 
