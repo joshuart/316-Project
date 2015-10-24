@@ -1,0 +1,6 @@
+For now, we have three tables created for the database, and the summary is as below (“*” represents “is part of the primary key”):
+
+User(name, email*, phoneNumber, major);
+Bid(date_time*, bid_price, bid_user_email*, book_ISBN*, book_seller_email*, book_post_time*);
+Book(title, ISBN*, description, condition, professor, price, course, edition, is_auction,
+is_buy_it_now, start_price, buy_it_now_price, display boolean, seller_email*, post_time*);
