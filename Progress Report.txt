@@ -6,7 +6,17 @@ Progress Report:
 
 		There are two different types of sale. The first option, buy-now, gives users a price at which they can immediately buy it. The second option is auction-style, where potential buyers make bids of increasingly high prices (like Ebay). The seller has the option to choose either approach for selling or can even use both. If using both, then bids are allowed but anyone can end the auction by meeting the buy-now price.
 
+		For now, we have three tables created for the database, and the summary is as below (“*” represents “is part of the primary key”):
+
+User(name, email*, phoneNumber, major);
+Bid(date_time*, bid_price, bid_user_email*, book_ISBN*, book_seller_email*, book_post_time*);
+Book(title, ISBN*, description, condition, professor, price, course, edition, is_auction,
+is_buy_it_now, start_price, buy_it_now_price, display boolean, seller_email*, post_time*);
+
+
 		Regardless of the sale type, once a buyer has been found (i.e. auction is expired or buy-now price is met) for the book, the seller will be notified and given the agreed upon price and the email of the buyer so they can discuss when/where to make the exchange. At this point our application is no longer of use to them for this particular book. 
+
+		
 
 		For our web interface, the main page will contain two buttons, which will direct users towards the spots for listing books and buying books (there may be intermediate searching steps for the latter).
 
