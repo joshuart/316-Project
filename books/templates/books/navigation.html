@@ -5,7 +5,7 @@
 {% block content %}
 
 	<form class="form" method = "post">
-	  {% csrf_token %} <!-- I'm not sure if this is necessary -->
+	  {% csrf_token %} 
 			<li><a href="{% url 'books.views.all_books' %}">View Books</a></li>
 			<li><a href="{% url 'books.views.list' %}">Sell a Book</a></li>
 	</form> 

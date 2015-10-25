@@ -17,6 +17,8 @@ from django.contrib import auth
 import datetime
 
 
+
+
 def index(request):
 	# return HttpResponse("Welcome to Duke's Book Exchange")
 	return render_to_response('books/index.html',
@@ -30,7 +32,7 @@ def register(request):
 		form = UserCreateForm(request.POST)
 		if form.is_valid():
 			form.save()
-			return HttpResponseRedirect(reverse('books.views.navigation'))
+			return HttpResponseRedirect(reverse('books.views.login'))
 	else:
 		form = UserCreateForm()
 	return render_to_response('books/register.html',
@@ -43,28 +45,15 @@ def logout(request):
 	return HttpResponseRedirect(reverse('books.views.index'))
 
 def login(request):
-	# username = request.POST['username']
-	# password = request.POST['password']
-	# user = auth.authenticate(username = username, password = password)
-	# if user is not None and user.is_active:
-	# 	auth_login(request, user)
-	# 	return HttpResponseRedirect('books.views.navigation')
-	# else: 
-	# 	return HttpResponse("Your credentials don't match any accounts")
-
-
-
 	return render_to_response('books/login.html',
 		{},
 		context_instance = RequestContext(request))
 
 
-
-
 class ListBookForm(ModelForm):
 	class Meta:
 		model = Book
-		exclude = ('post_date', 'seller_email',)
+		exclude = ['post_date', 'seller_email',]
 
 
 
@@ -72,10 +61,10 @@ class ListBookForm(ModelForm):
 def list(request):
 	listForm = ListBookForm(request.POST)
 	listing = listForm.save(commit = False)
-	listing.seller_email = "I don't know" # How do I fix this to grab the users email?
+	listing.seller_email = request.user.email # Is this how I grab the users email?
 	
 	# tz = pytz.timezone('EST')
-	# listing.post_date = datetime.datetime.now(tz)
+	listing.post_date = datetime.datetime.now() #This is the post_date in the UTC timezone
 	return HttpResponseRedirect(reverse('books.views.all_books'))
 
 

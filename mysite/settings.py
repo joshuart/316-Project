@@ -21,6 +21,8 @@ PROJ_ROOT = os.path.realpath(
 PROJ_NAME = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
 
 
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
