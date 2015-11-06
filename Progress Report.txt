@@ -26,3 +26,48 @@ is_buy_it_now, start_price, buy_it_now_price, display boolean, seller_email*, po
 
 	Description of web interface:
 		Users will come to page where they can either choose to post a book or view books that have been listed. In order to post a book a user must first register with the website. When posting a book users can choose whether to list their book as an auction or with a buy-it-now option or both. Visitors to the website must sign in order to purchase a book. When browsing for books users will be able to search for books by choosing departments and course numbers from a drop-down menu, which will then display the view for their search. When purchasing a book users will correspond with each other via email address. 
+		
+-------------------------------------------------------------
+Till milestone 2, we have revised our ER-design seperating old tables from previous milestone into four tables:
+User(email*, name, phone_Number, major);
+Book(ISBN*, title, edition, author);
+Bid(bid_time*, bid_price, bidder_email*, seller_email*, book_ISBN*, listing_start_time*);
+Listing(start_time*, seller_email*, book_ISBN*, is_auction, is_buy_it_now, condition, description, 
+start_price, buy_it_now_price, title, current_bid)
+
+We also further modified our triggers for the databases, where the detailed SQL codes are available in a seperate file:
+# Triggers:
+#   1. Once a new record is inserted to table Listing, if it is auction, check current bid = start bid
+#   if current bid is NULL or current bid != start bid, let current bid = start bid
+
+#   2. When a new record is inserted to bid, check bid_price >= current bid + 0.01. If not, throw an error; 
+#   If yes, update the current bid for the same listing in Listing table with the new high bid.
+
+#   3. ALso, need to check new bid's listing is auction
+#   4. When a new bid is inserted, the listing with buy_it_now = 1 should turn is_buy_it_now = 0
+
+#   5. At first all users' information is invisible to other users. For example, a potential buyer cannot see any seller's information
+#   we can make sellers' email address partially visible so the buyers know who post each listing. 
+
+#   6. When the window period of 7 days for each listing has passed, delete it from the VIEW. Also,
+#   if possible, send the seller an email notifying his listing has been ended (THIS FEATURE IS NOT INCLUDED IN TRIGGER)
+#   Also, when the listing is ended, if the type is auction and there is at least one bid, then send an email to the seller
+#   notifying him the highest bid and highest bidder's name, phone number, email and major. Also, 
+#   Send the highest bidder an email notifying the seller's contact info. (THIS FEATURE IS NOT INCLUDED IN TRIGGER).
+
+#   7. (TRIGGER NOT CREATED) Give the seller an option (on the website) of ending a listing. Once the listing is 
+#   ended by the seller then deleted it from the VIEW (Which can be controlled by view definition)
+
+#   8. (TRIGGER NOT CREATED) Give the seller an option (on the website) of relisting a listing. Once the listing
+#   relisted then create a new record wit heverything the same except for set current_bid and start_time.
+
+#   9. (TRIGGER NOT CREATED) For a listing with biy_it_now option, once a buyer has clicked Buy_it_now, then the listing will
+#   be ended immediately (delete it from the VIEW), and send the seller an email notifying the seller the buyer's all
+#   contact information. Send the buyer an email notifying the seller's contact info.
+#   10. Check expiration periodically.
+#   11, Tianyi: delete status and create a view to display.
+#   12. No need to send real message, just demo, talk to machine.
+
+In addition, we have scrape about 1,000 records of sample data (500-1000 records for each table) for our website development
+test. We've also tested our new databases and triggers by inserting a small portion of the data to the databases.
+All the current bugs have been fixed by doing so. Further modification is expected.
