@@ -68,3 +68,4 @@ We also further modified our triggers for the databases, where the detailed SQL 
 #   11, Tianyi: delete status and create a view to display.
 #   12. No need to send real message, just demo, talk to machine.
 
+In addition, we have scrape about 1,000 records of sample data (500-1000 records for each table) for our website development test. We've also tested our new databases and triggers by inserting a small portion of the data to the databases. All the current bugs have been fixed by doing so. Further modification is expected.
