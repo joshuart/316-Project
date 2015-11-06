@@ -1,5 +1,5 @@
 Daniel MacDonald - started working on the all-books view for the website
 Joshua Taylor - I completed forms to register users and list books. 
 Tianyi Wang - revised the ER design and wrote the sql code to create the databases
-Xiaoxian Wu - started scraping the data to use in the website
+Xiaoxian Wu - scraped sample data to use in the website and contributed codes to create the databases 
   
