@@ -3,18 +3,11 @@
 {% block heading %}List a Book{% endblock %}
 {% block login %}{% endblock %}
 {% block content %}
-		<form class="form" method = "post">
+		<form class="form" method = "post" action="{% url 'books.views.list_submit' %}">
 		{% csrf_token %}
-			<input type="email" placeholder="your_address@duke.edu">
-			<input type="text" placeholder="Book Title">
-			<input type="text" placeholder="ISBN">
-			<input type="text" placeholder="Author_Last_Name, Author_First_Name">
-			<input type="text" placeholder="Edition">
-			<input type="text" placeholder="Price">
-			<input type="text" placeholder="Professor">
-			<input type="text" placeholder="Course Department">
-			<input type="text" placeholder="Course Number">
-			<input type="text" placeholder="Condition">
+		<p>
+		{{ListBookForm}}
+		</p>
 		</form> 
 {% endblock %}
 

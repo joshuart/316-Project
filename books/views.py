@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from books.models import User, Book
+from books.models import Book
 from books.forms import UserCreateForm
 from django.forms.models import ModelForm, inlineformset_factory
 from django.contrib.auth import logout as auth_logout
@@ -53,18 +53,28 @@ def login(request):
 class ListBookForm(ModelForm):
 	class Meta:
 		model = Book
-		exclude = ['post_date', 'seller_email',]
+		fields ='__all__'
+		# exclude = ['post_date', 'seller_email',]
 
 
 
 @login_required(login_url = reverse_lazy('books.views.login'))
 def list(request):
+
+    return render_to_response('books/list.html',
+        { 'ListBookForm' : ListBookForm(),},
+        context_instance=RequestContext(request))
+
+
+
+
+def list_submit(request):
 	listForm = ListBookForm(request.POST)
 	listing = listForm.save(commit = False)
-	listing.seller_email = request.user.email # Is this how I grab the users email?
+	# listing.seller_email = request.user.email # Is this how I grab the users email?
 	
-	# tz = pytz.timezone('EST')
-	listing.post_date = datetime.datetime.now() #This is the post_date in the UTC timezone
+	# listing.post_date = datetime.datetime.now() #This is the post_date in the UTC timezone
+	# listing.save()
 	return HttpResponseRedirect(reverse('books.views.all_books'))
 
 

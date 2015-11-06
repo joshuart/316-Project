@@ -23,7 +23,8 @@ urlpatterns = patterns('books.views',
     url(r'^login$', 'login'),
     url(r'^logout$', 'logout'),
     url(r'^register$', 'register'),
-    url(r'^redirect$', 'redirect'),
+    url(r'^list_submit$', 'list_submit')
+    #url(r'^redirect$', 'redirect'),
 
 
 	)
