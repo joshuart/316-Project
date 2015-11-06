@@ -2,6 +2,11 @@ library(RSQLite)
 library(dplyr)
 library(magrittr)
 
+Bookdata <- as.data.frame(read.table("test.txt",sep = ",",stringsAsFactors = FALSE),stringsAsFactor = FALSE)
+Userdata <- as.data.frame(read.table("test2.txt",sep = ",",stringsAsFactors = FALSE),stringsAsFactor = FALSE)
+Listingdata <- as.data.frame(read.table("test3.txt",sep = ",",stringsAsFactors = FALSE),stringsAsFactor = FALSE)
+Biddata <- as.data.frame(read.table("test4.txt",sep = ",",stringsAsFactors = FALSE),stringsAsFactor = FALSE)
+
 (bookdb = src_sqlite("~wangtianyi/Documents/Study/Database316/316-Project/bookdb.sqlite", create = TRUE))
 bookdb <- dbConnect(SQLite(), dbname="bookdb.sqlite")
 
@@ -11,10 +16,9 @@ dbSendQuery(conn = bookdb,
               name TEXT NOT NULL,
               phone_Number TEXT NOT NULL UNIQUE,
               major TEXT, 
-              CONSTRAINT email CHECK(email = '%@duke.edu' OR email = '%@duke.%.edu')
+              CONSTRAINT email CHECK(email LIKE '%@duke.edu' OR email LIKE '%@duke.%.edu')
               );"
 )
-#Lets drop the phone number and major requirement. I don't think they provide any added benefit
 
 dbSendQuery(conn = bookdb,
             "CREATE TABLE Book(
@@ -32,10 +36,11 @@ dbSendQuery(conn = bookdb,
               bidder_email TEXT NOT NULL REFERENCES User(email),
               seller_email TEXT NOT NULL REFERENCES User(email),
               book_ISBN TEXT NOT NULL REFERENCES Book(ISBN),
-              listing_start_time INTEGER NOT NULL REFERENCES Book(start_time),
+              listing_start_time INTEGER NOT NULL REFERENCES Listing(start_time),
               PRIMARY KEY (bidder_email, bid_time, book_ISBN, seller_email, listing_start_time)
               CONSTRAINT bidPrice CHECK(bid_price >= 0)
               CONSTRAINT bidderNotSeller CHECK(NOT(bidder_email = seller_email))
+              CONSTRAINT bidAfterList CHECK(bid_time > listing_start_time)
               );"
 )
 
@@ -55,7 +60,6 @@ dbSendQuery(conn = bookdb,
               PRIMARY KEY(seller_email, book_ISBN, start_time)
               FOREIGN KEY(seller_email) REFERENCES Seller(email)
               FOREIGN KEY(book_ISBN) REFERENCES Book(ISBN)
-              CONSTRAINT Stat CHECK(Status = 'Active' OR Status = 'Ended')
               CONSTRAINT Cond CHECK(condition = 'New' OR condition = 'Likenew' OR condition = 'Used')
               CONSTRAINT IsAuc CHECK((is_auction = 1 AND start_price IS NOT NULL AND start_price >= 0) 
                                   OR (is_auction = 0 AND start_price IS NULL))
@@ -66,7 +70,6 @@ dbSendQuery(conn = bookdb,
               CONSTRAINT curPrice CHECK(NOT((is_auction  = 0 AND current_bid IS NOT NULL) OR (is_auction = 1 AND current_bid IS NULL)))
             )"
 )
-#I think the start_time should be a date variable
 
 
 # Triggers:
@@ -141,7 +144,7 @@ dbSendQuery(conn = bookdb,
                                                                AND book_ISBN = NEW.book_ISBN
                                                               AND start_time = NEW.listing_start_time))
               BEGIN 
-                UPDATE Listing SET is_buy_it_now = 0  WHERE seller_email = NEW.seller_email
+                UPDATE Listing SET is_buy_it_now = 0, buy_it_now_price = NULL  WHERE seller_email = NEW.seller_email
                                                           AND book_ISBN = NEW.book_ISBN
                                                          AND start_time = NEW.listing_start_time;
               END;"   
@@ -162,7 +165,48 @@ dbSendQuery(conn = bookdb,
               END;"   
 )
 
+dbRemoveTable(bookdb,"Listing")
+dbRemoveTable(bookdb,"Book")
+dbRemoveTable(bookdb,"User")
+dbRemoveTable(bookdb,"Bid")
 
+# dbListTables(bookdb)
+
+dbSendQuery(conn = bookdb, "SELECT * FROM Book") %>% 
+     dbFetch()
+
+
+dbSendQuery(conn = bookdb, "SELECT * FROM User") %>% 
+  dbFetch()
+
+dbSendQuery(conn = bookdb, "SELECT * FROM Listing") %>% 
+  dbFetch()
+
+
+dbSendQuery(conn = bookdb, "SELECT * FROM Bid") %>% 
+  dbFetch()
+
+
+insert_book <- function(dfrow){
+  dbSendQuery(conn = bookdb, paste("INSERT INTO Book VALUES ", paste0("(",paste(shQuote(as.character(dfrow)), collapse=", "),")"),sep = ""))
+}
+
+insert_user <- function(dfrow){
+  dbSendQuery(conn = bookdb, paste("INSERT INTO User VALUES ", paste0("(",paste(shQuote(as.character(dfrow)), collapse=", "),")"),sep = ""))
+}
+
+insert_listing <- function(dfrow){
+  dbSendQuery(conn = bookdb, paste("INSERT INTO Listing VALUES ", paste0("(",paste(shQuote(as.character(dfrow)), collapse=", "),")"),sep = ""))
+}
+
+insert_bid <- function(dfrow){
+  dbSendQuery(conn = bookdb, paste("INSERT INTO Bid VALUES ", paste0("(",paste(shQuote(as.character(dfrow)), collapse=", "),")"),sep = ""))
+}
+
+apply(Bookdata,1,insert_book)
+apply(Userdata,1,insert_user)
+apply(Listingdata,1,insert_listing)
+apply(Biddata,1,insert_bid)
 
 
 #NO NEED:
@@ -198,17 +242,27 @@ dbSendQuery(conn = bookdb,
 #             "DROP TRIGGER insert_bid_update_cur_bid;"          
 # )
 # 
-# dbRemoveTable(bookdb,"Listing")
-# dbRemoveTable(bookdb,"Book")
-# dbRemoveTable(bookdb,"User")
-# dbRemoveTable(bookdb,"Bid")
+('Grace.Carpenter@duke.edu', 'Grace Carpenter', '(999) 222-5021', 'African and African American Studies')
 
-# dbListTables(bookdb)
-
-# x <- dbSendQuery(conn = bookdb, "SELECT * FROM Listing") %>% 
-#      dbFetch()
+# "('72478527', 'Basic Econometrics','1','Nina Bawden')"
+# 
+# paste0("(",paste(shQuote(as.character(Bookdata[1,])), collapse=", "),")")
+# as.character(Bookdata[1,])
+# dbDisconnect(bookdb)  
 
 # --UPDATE Bid SET bid_time = DATETIME('NOW')  WHERE bid_price = NEW.bid_price;
-# dbWriteTable(conn = db, name = "Student", value = "student.csv",
+# dbWriteTable(conn = bookdb, name = "Book", value = "Bookdata",
 #              row.names = FALSE, header = TRUE)
-# dbDisconnect(bookdb)  
+# 
+# 
+# dbSendQuery(conn = bookdb, paste("INSERT INTO Book VALUES ", paste0("(",paste(shQuote(as.character(Bookdata[1,])), collapse=", "),")"),sep = ""))
+# 
+# dbSendQuery(conn = bookdb, "INSERT INTO Bid VALUES (1446541320,122.4,'Claretha.Haith@duke.edu','Cindy.Hayes@duke.edu',70311366,1446483518)")
+
+
+
+
+
+
+
+
