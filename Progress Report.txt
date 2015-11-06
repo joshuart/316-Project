@@ -21,7 +21,7 @@ is_buy_it_now, start_price, buy_it_now_price, display boolean, seller_email*, po
 		For our web interface, the main page will contain two buttons, which will direct users towards the spots for listing books and buying books (there may be intermediate searching steps for the latter).
 
 
-
+		We will use Django for our development platform. We have not implemented step 8 yet, but we are working on getting a test database.
 
 
 	Description of web interface:
