@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from books.models import Book
+from books.models import Book, Listing
 from books.forms import UserCreateForm
 from django.forms.models import ModelForm, inlineformset_factory
 from django.contrib.auth import logout as auth_logout
@@ -52,9 +52,9 @@ def login(request):
 
 class ListBookForm(ModelForm):
 	class Meta:
-		model = Book
-		fields ='__all__'
-		# exclude = ['post_date', 'seller_email',]
+		model = Listing
+		# fields ='__all__'
+		exclude = ['start_time', 'seller_email', 'active',]
 
 
 
@@ -71,14 +71,11 @@ def list(request):
 def list_submit(request):
 	listForm = ListBookForm(request.POST)
 	listing = listForm.save(commit = False)
-	# listing.seller_email = request.user.email # Is this how I grab the users email?
-	
-	# listing.post_date = datetime.datetime.now() #This is the post_date in the UTC timezone
-	# listing.save()
+	listing.seller_email = request.user.email
+	listing.start_time = datetime.datetime.now()
+	listing.active = True
+	listing.save()
 	return HttpResponseRedirect(reverse('books.views.all_books'))
-
-
-	# return HttpResponse("Welcome to the list page")
 
 
 def navigation(request):
