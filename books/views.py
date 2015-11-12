@@ -13,8 +13,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import views
 from django.contrib import auth
+from django import forms
 # import pytz
-import datetime
+import time
 
 
 
@@ -58,6 +59,7 @@ class ListBookForm(ModelForm):
 
 
 
+
 @login_required(login_url = reverse_lazy('books.views.login'))
 def list(request):
 
@@ -72,7 +74,7 @@ def list_submit(request):
 	listForm = ListBookForm(request.POST)
 	listing = listForm.save(commit = False)
 	listing.seller_email = request.user.email
-	listing.start_time = datetime.datetime.now()
+	listing.start_time = int(time.time())
 	listing.active = True
 	listing.save()
 	return HttpResponseRedirect(reverse('books.views.all_books'))

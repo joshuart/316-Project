@@ -1,22 +1,24 @@
 from django.conf import settings
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Book(models.Model):
 	isbn = models.CharField(max_length = 13, primary_key = True)
 	title = models.CharField(max_length = 200)
-	edition = models.PositiveSmallIntegerField(default = 1)
+	edition = models.PositiveSmallIntegerField(default = 1, validators = [MinValueValidator(1)])
 	author_first_name = models.CharField(max_length = 200, null = True)
 	author_last_name = models.CharField(max_length = 200)
+	#add additional authors
 
 
 class Bid(models.Model):
-	bid_time = models.DateTimeField('bid time')
-	bid_price = models.DecimalField(max_digits = 5, decimal_places = 2)
-	bidder_email = models.EmailField(settings.AUTH_USER_MODEL)
+	bid_time = models.IntegerField('bid time')
+	bid_price = models.DecimalField(max_digits = 5, decimal_places = 2, validators = [MinValueValidator(0)])
+	bidder_email = models.EmailField(settings.AUTH_USER_MODEL) #check bidder is not seller
 	seller_email = models.EmailField(settings.AUTH_USER_MODEL)
 	book_ISBN = models.ForeignKey('Listing')
-	listing_start_time = models.DateTimeField('date posted') #references
+	listing_start_time = models.IntegerField('date posted') #references
 
 
 
@@ -37,14 +39,14 @@ class Listing(Book):
 		(NEW, "New"), 
 		)
 
-	start_time = models.DateTimeField('date posted')
-	seller_email = models.EmailField(max_length = 200) #references
+	start_time = models.IntegerField('date posted')
+	seller_email = models.EmailField(max_length = 200)
 	course_dept = models.CharField(max_length = 8)
 	course_num = models.PositiveSmallIntegerField(default = 0)
 	professor = models.CharField(max_length = 200)
 	condition = models.CharField(max_length = 9, choices = CONDITION_CHOICES, default = GOOD)
 	is_auction = models.BooleanField(default = False)
-	is_buy_it_now = models.BooleanField(default = True) #need to constrain that is_auction and is_buy_it_now can't both be false
+	is_buy_it_now = models.BooleanField(default = True) #need to constrain that is_auction or is_buy_it_now can't be both
 	description = models.TextField(max_length = 500)
 	buy_it_now_price = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)
 	start_bid = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)
@@ -57,6 +59,19 @@ class Listing(Book):
 	# def __unicode__():
 	# 	return self.seller_email, self.title, self.buy_it_now_price
 	
+
+
+########## Questions ##############
+# 1. How to add constraints and triggers to django
+# 2. celery cron jobs
+# 3. how to handle boolean data
+
+# TODO:
+# 1. celery.py
+# 2. create constraints
+# 3. create listings page
+# 4. create modify listings page
+
 
 
 # References used:
