@@ -56,6 +56,17 @@ class ListBookForm(ModelForm):
 		model = Listing
 		# fields ='__all__'
 		exclude = ['start_time', 'seller_email', 'active',]
+		help_texts = {
+		'first_author_last_name': ('Required'),
+		}
+		error_messages = {
+		'edition': {
+			'validators': ("Editions less than 1 don't make sense!"),},
+		'buy_it_now_price': {
+			'validators': ("Sorry, but prices have to be between $0-$999.99!"),},
+		'start_bid': {
+			'validators': ("Sorry, but prices have to be between $0-$999.99!"),},
+		}
 
 
 @login_required(login_url = reverse_lazy('books.views.login'))

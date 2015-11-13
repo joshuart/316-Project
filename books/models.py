@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class Book(models.Model):
 	isbn = models.CharField(max_length = 13, primary_key = True)
 	title = models.CharField(max_length = 200)
-	edition = models.PositiveSmallIntegerField(default = 1) #, validators = [MinValueValidator(1)])
+	edition = models.PositiveSmallIntegerField(default = 1, validators = [MinValueValidator(1)])
 	first_author_last_name = models.CharField(max_length = 200)
 	first_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
 	second_author_last_name = models.CharField(max_length = 200, blank = True, default = "")
@@ -58,8 +58,8 @@ class Listing(Book):
 	condition = models.CharField(max_length = 9, choices = CONDITION_CHOICES, default = GOOD)
 	is_auction = models.BooleanField(default = False)
 	is_buy_it_now = models.BooleanField(default = True) #need to constrain that is_auction or is_buy_it_now can't be both
-	description = models.TextField(max_length = 500, blank = True, default = "")
-	buy_it_now_price = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)#, validators = [MinValueValidator(0)])
+	description = models.TextField(max_length = 500, blank = True , default = "")
+	buy_it_now_price = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0, validators = [MinValueValidator(0)])
 	start_bid = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)
 	active = models.BooleanField(default = True)
 	# current_bid = models.ManyToManyField() #references
