@@ -6,7 +6,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from books.models import Book, Listing
 from books.forms import UserCreateForm
-from django.forms.models import ModelForm, inlineformset_factory
+from django.forms.models import ModelForm, inlineformset_factory, modelformset_factory
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -58,12 +58,9 @@ class ListBookForm(ModelForm):
 		exclude = ['start_time', 'seller_email', 'active',]
 
 
-
-
 @login_required(login_url = reverse_lazy('books.views.login'))
 def list(request):
-
-    return render_to_response('books/list.html',
+	return render_to_response('books/list.html',
         { 'ListBookForm' : ListBookForm(),},
         context_instance=RequestContext(request))
 
@@ -92,3 +89,8 @@ def all_books(request):
 	# return render_to_response('books/all-books.html',
 	# 	{'books' : Book.objects.all().order)by('course_dept', 'course_num', 'professor', 'title')}, 
 	# 	context_instance = RequestContext(request)) 
+
+@login_required(login_url = reverse_lazy('books.views.login'))
+def edit_list(request):
+	return HttpResponse("Welcome to the edit-listings page")
+

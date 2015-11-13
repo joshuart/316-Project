@@ -6,10 +6,20 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class Book(models.Model):
 	isbn = models.CharField(max_length = 13, primary_key = True)
 	title = models.CharField(max_length = 200)
-	edition = models.PositiveSmallIntegerField(default = 1, validators = [MinValueValidator(1)])
-	author_first_name = models.CharField(max_length = 200, null = True)
-	author_last_name = models.CharField(max_length = 200)
-	#add additional authors
+	edition = models.PositiveSmallIntegerField(default = 1) #, validators = [MinValueValidator(1)])
+	first_author_last_name = models.CharField(max_length = 200)
+	first_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
+	second_author_last_name = models.CharField(max_length = 200, blank = True, default = "")
+	second_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
+	third_author_last_name = models.CharField(max_length = 200, blank = True, default = "")	
+	third_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
+	fourth_author_last_name = models.CharField(max_length = 200, blank = True, default = "")	
+	fourth_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
+	fifth_author_last_name = models.CharField(max_length = 200, blank = True, default = "")
+	fifth_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
+
+
+
 
 
 class Bid(models.Model):
@@ -25,7 +35,8 @@ class Bid(models.Model):
 
 class Listing(Book):
 	"""Listing relation contains the relavant information about the books for sale"""
-	
+
+
 	POOR = "poor"
 	FAIR = "fair"
 	GOOD = "good"
@@ -39,16 +50,16 @@ class Listing(Book):
 		(NEW, "New"), 
 		)
 
-	start_time = models.IntegerField('date posted')
+	start_time = models.IntegerField()
 	seller_email = models.EmailField(max_length = 200)
 	course_dept = models.CharField(max_length = 8)
-	course_num = models.PositiveSmallIntegerField(default = 0)
+	course_num = models.PositiveSmallIntegerField(default = 101)
 	professor = models.CharField(max_length = 200)
 	condition = models.CharField(max_length = 9, choices = CONDITION_CHOICES, default = GOOD)
 	is_auction = models.BooleanField(default = False)
 	is_buy_it_now = models.BooleanField(default = True) #need to constrain that is_auction or is_buy_it_now can't be both
-	description = models.TextField(max_length = 500)
-	buy_it_now_price = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)
+	description = models.TextField(max_length = 500, blank = True, default = "")
+	buy_it_now_price = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)#, validators = [MinValueValidator(0)])
 	start_bid = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)
 	active = models.BooleanField(default = True)
 	# current_bid = models.ManyToManyField() #references
