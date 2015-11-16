@@ -93,10 +93,18 @@ def navigation(request):
 		{},
 		context_instance=RequestContext(request))
 
-
+def get_listings_for_book(request, match_name):
+	listings = Listing.objects.filter()
+	return render_to_response('books/listings-for-book.html',
+		{'all_listings':listings}
+		context_instance=RequestContext(request))
 
 def all_books(request):
-	return HttpResponse("Welcome to the all-books page")
+	all_listings = Listing.objects.all()
+	return render_to_response('books/all-books.html',
+		{ 'book_list':all_listings, },
+		context_instance=RequestContext(request))
+	#return HttpResponse("Welcome to the all-books page")
 	# return render_to_response('books/all-books.html',
 	# 	{'books' : Book.objects.all().order)by('course_dept', 'course_num', 'professor', 'title')}, 
 	# 	context_instance = RequestContext(request)) 

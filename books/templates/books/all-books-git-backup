@@ -1,0 +1,25 @@
+{% extends "books/base.html" %}
+
+{% block heading %}All Books{% endblock %}
+
+{% block content %}
+
+<ul>
+{% for book in book_list %}
+<!-- Render a table that is sorted by depart, course, professor, and title -->
+	<li> {{ book.isbn }}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
+
+
+<!--
+def all_books(request):
+	all_listings = Listing.objects.all()
+	return render_to_response('books/all-books.html',
+		{ 'book_list':all_listings, },
+		context_instance=RequestContext(request))
+
+
+-->

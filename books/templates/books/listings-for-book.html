@@ -1,0 +1,14 @@
+{% extends "books/base.html" %}
+
+{% block heading %}All Books{% endblock %}
+
+{% block content %}
+
+<ul>
+{% for listing in all_listings %}
+<!-- Render a table that is sorted by depart, course, professor, and title -->
+	<li>  {{ listing.seller_email }}  </li>
+{% endfor %}
+</ul>
+
+{% endblock %}
