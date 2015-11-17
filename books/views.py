@@ -96,7 +96,7 @@ def navigation(request):
 def get_listings_for_book(request, match_name):
 	listings = Listing.objects.filter()
 	return render_to_response('books/listings-for-book.html',
-		{'all_listings':listings}
+		{'all_listings':listings},
 		context_instance=RequestContext(request))
 
 def all_books(request):
