@@ -1,15 +1,17 @@
 {% extends "books/base.html" %}
 
-{% block heading %}All Books{% endblock %}
+{% block heading %}Book Listings{% endblock %}
 
 {% block content %}
 
 <ul>
 {% for book in book_list %}
-<!-- Render a table that is sorted by depart, course, professor, and title 
-	<li> <a href="{% url 'books.views.get_listings_for_book' name = book.title %}"> {{ book.title }} </a> </li> -->
-	<li> {{ book.title }}</li>
+<!-- Render a table that is sorted by depart, course, professor, and title -->
+	
+	<li> <a href="{% url 'books.views.get_listings_for_book' match_isbn=book.isbn %}"> {{ book.title }} </a> </li> 
+
 {% endfor %}
 </ul>
 
 {% endblock %}
+

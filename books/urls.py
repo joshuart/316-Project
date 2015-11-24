@@ -25,6 +25,7 @@ urlpatterns = patterns('books.views',
     url(r'^register$', 'register'),
     url(r'^list_submit$', 'list_submit'),
     url(r'^edit_list$', 'edit_list'),
+    url(r'^listings-for-book/(?P<match_isbn>[-\w\ ]+)/$', 'get_listings_for_book' ),
     #url(r'^redirect$', 'redirect'),
 
 
