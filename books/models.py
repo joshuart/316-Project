@@ -82,6 +82,7 @@ class Listing(Book):
 # 2. create constraints
 # 3. create listings page
 # 4. create modify listings page
+# 5. Check for duplicates
 
 
 

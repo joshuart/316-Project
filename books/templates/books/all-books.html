@@ -7,7 +7,6 @@
 <ul>
 {% for book in book_list %}
 <!-- Render a table that is sorted by depart, course, professor, and title -->
-	
 	<li> <a href="{% url 'books.views.get_listings_for_book' match_isbn=book.isbn %}"> {{ book.title }} </a> </li> 
 
 {% endfor %}

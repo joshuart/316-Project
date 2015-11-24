@@ -14,7 +14,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import views
 from django.contrib import auth
 from django import forms
-# import pytz
+from django.utils.translation import ugettext_lazy as _
 import time
 
 
@@ -56,17 +56,31 @@ class ListBookForm(ModelForm):
 		model = Listing
 		# fields ='__all__'
 		exclude = ['start_time', 'seller_email', 'active',]
-		help_texts = {
-		'first_author_last_name': ('Required'),
-		}
 		error_messages = {
-		'edition': {
-			'validators': ("Editions less than 1 don't make sense!"),},
-		'buy_it_now_price': {
-			'validators': ("Sorry, but prices have to be between $0-$999.99!"),},
-		'start_bid': {
-			'validators': ("Sorry, but prices have to be between $0-$999.99!"),},
+			'buy_it_now_price': {
+				'min_value': _("Sorry, but the price must be between $0-$999.99!")
+			},
+			'edition': {
+				'min_value': _("An edition less than 1 doesn't make sense!")
+			},
+			'start_bid': {
+				"min_value": _("Sorry, but the price must be between $0-$999.99!")
+			},
 		}
+
+
+		# def check_values(self):
+		# 	buy_it_now_price = float(self.cleaned_data['buy_it_now_price'])
+		# 	edition = int(self.cleaned_data['edition'])
+		# 	start_bid = float(self.cleaned_data['start_bid'])
+		# 	if buy_it_now_price < 0:
+		# 		raise forms.ValidationError("Sorry, but the price must be between $0-$999.99!")
+		# 	if edition < 1:
+		# 		raise forms.ValidationError("An edition less than 1 doesn't make sense!")
+		# 	if start_bid < 0:
+		# 		raise forms.ValidationError("Sorry, but the price must be between $0-$999.99!")
+		# 	return (buy_it_now_price, edition, start_bid)
+
 
 
 @login_required(login_url = reverse_lazy('books.views.login'))
@@ -79,13 +93,33 @@ def list(request):
 
 
 def list_submit(request):
-	listForm = ListBookForm(request.POST)
-	listing = listForm.save(commit = False)
-	listing.seller_email = request.user.email
-	listing.start_time = int(time.time())
-	listing.active = True
-	listing.save()
-	return HttpResponseRedirect(reverse('books.views.all_books'))
+	args = {}
+	if request.method == "POST":
+		listForm = ListBookForm(request.POST)
+		if listForm.is_valid():
+			listing = listForm.save(commit = False)
+			listing.seller_email = request.user.email
+			listing.start_time = int(time.time())
+			listing.active = True
+			listing.save()
+			return HttpResponseRedirect(reverse('books.views.all_books'))
+	else:
+		listForm = ListBookForm()
+	args['ListBookForm'] = listForm
+	return render(request, 'books/list.html', args)
+
+	# return render_to_response('books/list.html',
+ #        { 'ListBookForm' : ListBookForm(),},
+ #        context_instance=RequestContext(request))
+
+	# listForm = ListBookForm(request.POST)
+	# listing = listForm.save(commit = False)
+	# listing.seller_email = request.user.email
+	# listing.start_time = int(time.time())
+	# listing.active = True
+	# listing.save()
+	# return HttpResponseRedirect(reverse('books.views.all_books'))
+
 
 
 def navigation(request):
