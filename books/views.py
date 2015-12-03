@@ -16,6 +16,9 @@ from django.contrib import auth
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 import time
+from django.conf import settings
+
+from django.core.mail import send_mail
 
 
 
@@ -33,6 +36,25 @@ def register(request):
 		form = UserCreateForm(request.POST)
 		if form.is_valid():
 			form.save()
+
+
+
+			form_email = form.cleaned_data['email']
+			form_username = form.cleaned_data['username']
+			#form_full_name = form.cleaned_data.get("full_name")
+			subject = 'Your message is received.'
+			from_email = settings.EMAIL_HOST_USER
+			to_email = [form_email]
+			contact_message = """Hi %s: 
+			Thank you for registering at dukebooktrading. Thank you.
+
+			Duke Book Trading Team""" %(form_username)
+			send_mail(subject, contact_message,from_email, to_email,fail_silently = False)
+
+
+
+
+
 			return HttpResponseRedirect(reverse('books.views.login'))
 	else:
 		form = UserCreateForm()
