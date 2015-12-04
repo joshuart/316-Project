@@ -1,5 +1,5 @@
 #Transform the sample data so that it can be added to the db
-library(plyr)
+library(random)
 
 bid <- read.csv("~/316/project/sample data/bid.txt", stringsAsFactors=FALSE)
 book <- read.csv("~/316/project/sample data/book.txt", comment.char="#", stringsAsFactors=FALSE)
@@ -12,6 +12,13 @@ listing$is_buy_it_now = listing$is_buy_it_now == 1
 listing$active = F
 
 
+# for (i in 1:nrow(book)){
+#   f = round(10*runif(1)) + 1
+#   first_name = randomStrings(1, f, digits = F, upperalpha = F)
+#   last_name = randomStrings(1, f, digits = F, upperalpha = F)
+#   book$first_author_name[i] = paste(first_name, last_name, sep = " ")
+# }
+
 bid$id = 1:nrow(bid)
 bid = merge(bid, listing, by.x = c("book_ISBN", "listing_start_time", "seller_email"), 
             by.y = c("book_ISBN", "start_time", "seller_email"))
@@ -20,6 +27,7 @@ bid = rename(bid, replace = c(book_ISBN = "book_id", id.y = "listing_id", id.x =
 listing = rename(listing, replace = c(book_ISBN = "book_id", start_price = "start_bid"))
 listing$condition[listing$condition == "Likenew"] <- "excellent"
 listing$condition[listing$condition == "Used"] <- "Fair"
+
 
 
 bidVars = c("id","bid_time", "bid_price", "bidder_email", "listing_id")
@@ -36,7 +44,7 @@ book = rename(book, replace = c(author = "first_author_name"))
 bookVars = c("edition", "ISBN", "title", "fifth_author_name", "fourth_author_name", "second_author_name",
              "first_author_name", "third_author_name")
 book = book[bookVars]
-
+book$first_author_name = iconv(book$first_author_name, from="latin1", to = "ASCII", sub = "")
 
 
 user$id = 1:nrow(user)
