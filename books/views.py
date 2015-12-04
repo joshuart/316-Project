@@ -46,9 +46,9 @@ def register(request):
 			from_email = settings.EMAIL_HOST_USER
 			to_email = [form_email]
 			contact_message = """Hi %s: 
-			Thank you for registering at dukebooktrading. Thank you.
+Thank you for registering at dukebooktrading. Thank you.
 
-			Duke Book Trading Team""" %(form_username)
+				Duke Book Trading Team""" %(form_username)
 			send_mail(subject, contact_message,from_email, to_email,fail_silently = False)
 
 
@@ -112,6 +112,20 @@ def list_submit(request):
 			listing.start_time = int(time.time())
 			listing.active = True
 			listing.save()
+
+			form_email = request.user.email
+			form_username = request.user.username
+			subject = 'Your listing has been posted.'
+			from_email = settings.EMAIL_HOST_USER
+			form_title = listForm.cleaned_data['title']
+			to_email = [form_email]
+			contact_message = """Hi %s: 
+Thank you for listing at dukebooktrading. Your listing of %s has been posted. Thank you.
+
+				Duke Book Trading Team""" %(form_username, form_title)
+			send_mail(subject, contact_message,from_email, to_email,fail_silently = False)
+
+
 			return HttpResponseRedirect(reverse('books.views.all_books'))
 	else:
 		listForm = ListBookForm()
@@ -127,7 +141,7 @@ def navigation(request):
 
 
 def get_isbn_listings(request, match_isbn):
-	listings = Listing.objects.filter(book=match_isbn[0])
+	listings = Listing.objects.filter(isbn=match_isbn[0])
 
 
 	return render_to_response('books/listings-for-book.html',
@@ -136,7 +150,7 @@ def get_isbn_listings(request, match_isbn):
 
 def get_listings_for_book(request, match_isbn):
 
-	listings = Listing.objects.filter(book=match_isbn)
+	listings = Listing.objects.filter(isbn=match_isbn, active = True, start_time__lte= int(time.time()) - 3)
 	return render_to_response('books/listings-for-book.html',
 		{'all_listings':listings,},
 		context_instance=RequestContext(request))

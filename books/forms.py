@@ -5,6 +5,9 @@ import re
 
 class UserCreateForm(UserCreationForm):
 	email = forms.EmailField(required = True)
+	first_name = forms.CharField(widget=forms.TextInput(attrs={'class':'input_text'}), max_length=50)
+	last_name = forms.CharField(widget= forms.TextInput(attrs={'class':'input_text'}), max_length=50)
+	major = forms.CharField(widget=forms.TextInput(attrs={'class':'input_text'}), max_length=50)
 	class Meta:
 		model = User
 		fields = ("username", "email", "password1", "password2")
@@ -13,9 +16,15 @@ class UserCreateForm(UserCreationForm):
 	def clean_email(self):
 		data = self.cleaned_data['email']
 		valid = re.search("(@)?(\w+)(.duke.edu)", data)
+		user = User.objects.filter(email=data)
 		if "@duke.edu" not in data and valid == None: 
 			raise forms.ValidationError("Must be a Duke email address")
+		if len(user) > 0:
+			raise forms.ValidationError("This email has been registered")
+
 		return data
+        
+
 
 	def save(self, commit = True):
 		user = super(UserCreateForm, self).save(commit = False)

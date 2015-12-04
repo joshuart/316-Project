@@ -7,7 +7,13 @@
 <ul>
 {% for listing in all_listings %}
 <!-- Render a table that is sorted by depart, course, professor, and title -->
-	<li>  {{ listing.seller_email }}  </li>
+	<li>  {{ listing.seller_email }} {{listing.condition}} {{listing.is_buy_it_now}} {{listing.is_auction}}
+		{% ifequal listing.is_buy_it_now  True %} 
+			Buy now!
+		{% else %}
+			Auction item!
+		{% endifequal %} 
+	</li>
 {% endfor %}
 </ul>
 

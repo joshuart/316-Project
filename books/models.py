@@ -49,6 +49,7 @@ class Listing(models.Model):
 
 	class Meta:
 		db_table = u'listing'
+		unique_together = (("start_time","seller_email"),)
 
 
 
