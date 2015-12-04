@@ -66,6 +66,7 @@ class Listing(Book):
 
 	class Meta:
 		db_table = u'listing'
+		unique_together = (("start_time","seller_email"),)
 
 	# def __unicode__():
 	# 	return self.seller_email, self.title, self.buy_it_now_price
