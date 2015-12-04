@@ -7,33 +7,15 @@ class Book(models.Model):
 	isbn = models.CharField(max_length = 13, primary_key = True)
 	title = models.CharField(max_length = 200)
 	edition = models.PositiveSmallIntegerField(default = 1, validators = [MinValueValidator(1)])
-	first_author_last_name = models.CharField(max_length = 200)
-	first_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
-	second_author_last_name = models.CharField(max_length = 200, blank = True, default = "")
-	second_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
-	third_author_last_name = models.CharField(max_length = 200, blank = True, default = "")	
-	third_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
-	fourth_author_last_name = models.CharField(max_length = 200, blank = True, default = "")	
-	fourth_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
-	fifth_author_last_name = models.CharField(max_length = 200, blank = True, default = "")
-	fifth_author_first_name = models.CharField(max_length = 200, blank = True, default = "")
+	first_author_name = models.CharField(max_length = 200)
+	second_author_name = models.CharField(max_length = 200, blank = True, default = "")
+	third_author_name = models.CharField(max_length = 200, blank = True, default = "")	
+	fourth_author_name = models.CharField(max_length = 200, blank = True, default = "")	
+	fifth_author_name = models.CharField(max_length = 200, blank = True, default = "")
 
 
 
-
-
-class Bid(models.Model):
-	bid_time = models.IntegerField('bid time')
-	bid_price = models.DecimalField(max_digits = 5, decimal_places = 2, validators = [MinValueValidator(0)])
-	bidder_email = models.EmailField(settings.AUTH_USER_MODEL) #check bidder is not seller
-	seller_email = models.EmailField(settings.AUTH_USER_MODEL)
-	book_ISBN = models.ForeignKey('Listing')
-	listing_start_time = models.IntegerField('date posted') #references
-
-
-
-
-class Listing(Book):
+class Listing(models.Model):
 	"""Listing relation contains the relavant information about the books for sale"""
 
 
@@ -50,11 +32,12 @@ class Listing(Book):
 		(NEW, "New"), 
 		)
 
+	book = models.ForeignKey(Book)
 	start_time = models.IntegerField()
 	seller_email = models.EmailField(max_length = 200)
-	course_dept = models.CharField(max_length = 8)
-	course_num = models.PositiveSmallIntegerField(default = 101)
-	professor = models.CharField(max_length = 200)
+	# course_dept = models.CharField(max_length = 8)
+	# course_num = models.PositiveSmallIntegerField(default = 101)
+	# professor = models.CharField(max_length = 200)
 	condition = models.CharField(max_length = 9, choices = CONDITION_CHOICES, default = GOOD)
 	is_auction = models.BooleanField(default = False)
 	is_buy_it_now = models.BooleanField(default = True) #need to constrain that is_auction or is_buy_it_now can't be both
@@ -62,13 +45,18 @@ class Listing(Book):
 	buy_it_now_price = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0, validators = [MinValueValidator(0)])
 	start_bid = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)
 	active = models.BooleanField(default = True)
-	# current_bid = models.ManyToManyField() #references
+	current_bid = models.IntegerField(default = 0) #references
 
 	class Meta:
 		db_table = u'listing'
 
-	# def __unicode__():
-	# 	return self.seller_email, self.title, self.buy_it_now_price
+
+
+class Bid(models.Model):
+	bid_time = models.IntegerField('bid time')
+	bid_price = models.DecimalField(max_digits = 5, decimal_places = 2, validators = [MinValueValidator(0)])
+	bidder_email = models.EmailField(settings.AUTH_USER_MODEL) #check bidder is not seller
+	listing = models.ForeignKey(Listing)
 	
 
 

@@ -91,18 +91,6 @@ class ListBookForm(ModelForm):
 		}
 
 
-		# def check_values(self):
-		# 	buy_it_now_price = float(self.cleaned_data['buy_it_now_price'])
-		# 	edition = int(self.cleaned_data['edition'])
-		# 	start_bid = float(self.cleaned_data['start_bid'])
-		# 	if buy_it_now_price < 0:
-		# 		raise forms.ValidationError("Sorry, but the price must be between $0-$999.99!")
-		# 	if edition < 1:
-		# 		raise forms.ValidationError("An edition less than 1 doesn't make sense!")
-		# 	if start_bid < 0:
-		# 		raise forms.ValidationError("Sorry, but the price must be between $0-$999.99!")
-		# 	return (buy_it_now_price, edition, start_bid)
-
 
 
 @login_required(login_url = reverse_lazy('books.views.login'))
@@ -130,18 +118,6 @@ def list_submit(request):
 	args['ListBookForm'] = listForm
 	return render(request, 'books/list.html', args)
 
-	# return render_to_response('books/list.html',
- #        { 'ListBookForm' : ListBookForm(),},
- #        context_instance=RequestContext(request))
-
-	# listForm = ListBookForm(request.POST)
-	# listing = listForm.save(commit = False)
-	# listing.seller_email = request.user.email
-	# listing.start_time = int(time.time())
-	# listing.active = True
-	# listing.save()
-	# return HttpResponseRedirect(reverse('books.views.all_books'))
-
 
 
 def navigation(request):
@@ -151,7 +127,7 @@ def navigation(request):
 
 
 def get_isbn_listings(request, match_isbn):
-	listings = Listing.objects.filter(isbn=match_isbn[0])
+	listings = Listing.objects.filter(book=match_isbn[0])
 
 
 	return render_to_response('books/listings-for-book.html',
@@ -160,14 +136,11 @@ def get_isbn_listings(request, match_isbn):
 
 def get_listings_for_book(request, match_isbn):
 
-	listings = Listing.objects.filter(isbn=match_isbn)
+	listings = Listing.objects.filter(book=match_isbn)
 	return render_to_response('books/listings-for-book.html',
 		{'all_listings':listings,},
 		context_instance=RequestContext(request))
-	#return HttpResponseRedirect(reverse('get_isbn_listings', args=(match_isbn,)))
-	#return render_to_response('books/listings-for-book.html',
-	#	{'all_listings':listings,},
-	#	context_instance=RequestContext(request))
+
 
 def all_books(request):
 	all_listings = Listing.objects.all()
