@@ -5,6 +5,9 @@ import re
 
 class UserCreateForm(UserCreationForm):
 	email = forms.EmailField(required = True)
+	first_name = forms.CharField(widget=forms.TextInput(attrs={'class':'input_text'}), max_length=50)
+	last_name = forms.CharField(widget= forms.TextInput(attrs={'class':'input_text'}), max_length=50)
+	major = forms.CharField(widget=forms.TextInput(attrs={'class':'input_text'}), max_length=50)
 	class Meta:
 		model = User
 		fields = ("username", "email", "password1", "password2")
