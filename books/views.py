@@ -175,6 +175,40 @@ def edit_list(request):
 def buy_book(request, listing_id):
 	listing = Listing.objects.filter(id = listing_id)
 	listing.active = False
+'''
+	#Send email to the seller:
+	form_seller_email = listing.seller_email
+	form_seller_first = 
+	form_seller_last =
+	form_seller_major =
+
+	form_buyer_email =
+	form_buyer_first =
+	form_buyer_last =
+	form_buyer_major =
+
+	subject_seller = 'Your listing sold'
+	subject_buyer = 'You just bought a book'
+	from_email = settings.EMAIL_HOST_USER
+	form_title = #to be filled (book title)
+	contact_message_seller = """Hi %s %s: 
+Your listing of %s just sold. The buyer is %s %s in %s major. You can contact the buyer at %s. Thank you.
+
+				Best Wishes,
+				Duke Book Trading Team""" %(form_seller_first, form_seller_last, form_title, form_buyer_first, form_buyer_last, form_buyer_major, form_buyer_email)
+	send_mail(subject_seller, contact_message_seller,from_email, [form_seller_email],fail_silently = False)
+
+
+	contact_message_buyer = """Hi %s %s: 
+Thank you for purchasing %s at dukebooktrading. The seller is %s %s in %s major. You can contact the seller at %s. Thank you.
+
+				Best Wishes,
+				Duke Book Trading Team""" %(form_buyer_first, form_buyer_last, form_title, form_seller_first, form_seller_last, form_seller_major, form_seller_email)
+	send_mail(subject_buyer, contact_message_buyer,from_email, [form_buyer_email],fail_silently = False)
+
+
+'''
+
 	return HttpResponse("Okay, we'll let the seller know. Expect to hear back from them soon!")
 
 
