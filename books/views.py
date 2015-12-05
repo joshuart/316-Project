@@ -20,7 +20,7 @@ from django.conf import settings
 
 from django.core.mail import send_mail
 
-from .tasks import send_email
+#from .tasks import send_email
 
 
 def index(request):

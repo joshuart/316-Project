@@ -20,7 +20,7 @@ from celery.task import periodic_task
 
 #periodic_task for listings with buy_it_now function only
 @periodic_task(run_every=crontab(minute=0, hour=0))  #Execute daily at midnight.
-def send_email():
+def send_email_BIN():
 	from_email = settings.EMAIL_HOST_USER
 	#replace the follow pseudo code with real code:
 	#select listings in buy_it_now style only with start_time earlier than three days ago but later than four days ago as dying_listings
@@ -42,7 +42,7 @@ Your listing of [%s] didn't sell. Welcome to relist your listing at DukeBookTrad
 
 #periodic_task for listings with bid function (can also be buy_it_now)
 @periodic_task(run_every=crontab(minute=0, hour=0))  #Execute daily at midnight.
-def send_email():
+def send_email_bid():
 	from_email = settings.EMAIL_HOST_USER
 	#replace the follow pseudo code with real code:
 	#select bids whose listing's start_time is earlier than three days ago but later than four days ago as dying_bids
