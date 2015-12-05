@@ -184,9 +184,9 @@ def buy_book(request, listing_id):
 
 	#Send email to the seller:
 	form_seller_email = listing.seller_email
-	form_seller_first = user.objects.get(email = form_seller_email).first_name
-	form_seller_last = user.objects.get(email = form_seller_email).last_name
-	form_seller_major = user.objects.get(email = form_seller_email).major
+	form_seller_first = User.objects.get(email = form_seller_email).first_name
+	form_seller_last = User.objects.get(email = form_seller_email).last_name
+	form_seller_major = User.objects.get(email = form_seller_email).major
 
 	form_buyer_email = request.user.email
 	form_buyer_first = request.user.first_name
