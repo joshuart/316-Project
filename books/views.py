@@ -103,6 +103,7 @@ def list_submit(request):
 	args = {}
 	if request.method == "POST":
 		listForm = ListBookForm(request.POST)
+		listForm.fields["Book"].queryset = Book.objects.raw('Select title from Book')
 		if listForm.is_valid():
 			listing = listForm.save(commit = False)
 			listing.seller_email = request.user.email
@@ -157,9 +158,12 @@ def get_listings_for_book(request, match_isbn, match_title):
 			{'the_title':match_title, 'all_listings':listings,},
 			context_instance=RequestContext(request))
 
+def get_bid_info(request, match_listing):
+	return
 
 def all_books(request):
 	all_listings = Book.objects.all()
+	#all_listings = Book.objects.raw('Select isbn from books_book')
 
 	return render_to_response('books/all-books.html',
 		{ 'book_list':all_listings, },
@@ -172,6 +176,9 @@ def edit_list(request):
 
 
 def buy_book(request, listing_id):
+
+
+
 	listing = Listing.objects.filter(id = listing_id)
 	listing.active = False
 
@@ -208,5 +215,12 @@ Thank you for purchasing %s at dukebooktrading. The seller is %s %s in %s major.
 
 
 
+
 	return HttpResponse("Okay, we'll let the seller know. Expect to hear back from them soon!")
+
+'''
+def buy_it_now_click(request):
+	#when someone clicks the buy_it_now button, an email will be sent to both buyer and seller
+'''
+
 
