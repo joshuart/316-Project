@@ -18,6 +18,29 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 '''
 
+#periodic_task for listings with buy_it_now function only
+@periodic_task(run_every=crontab(minute=0, hour=0))  #Execute daily at midnight.
+def send_email():
+	from_email = settings.EMAIL_HOST_USER
+	#replace the follow pseudo code with real code:
+	#select listings in buy_it_now style only with start_time earlier than three days ago but later than four days ago as dying_listings
+	for listing in dying_listings:
+		task_seller_first = 
+		task_seller_last =
+		task_seller_email =
+		task_listing_title = 
+
+		subject = "Your listing didn't sell"
+		to_email = task_seller_email
+		contact_message = """Hi %s %s: 
+Your listing of [%s] didn't sell. Welcome to relist your listing at DukeBookTrading.
+
+				Best Wishes,
+				Duke Book Trading Team""" %(task_seller_first, task_seller_last,task_listing_title)
+		send_mail(subject, contact_message,from_email, to_email,fail_silently = False)
+
+
+#periodic_task for listings with bid function (can also be buy_it_now)
 @periodic_task(run_every=crontab(minute=0, hour=0))  #Execute daily at midnight.
 def send_email():
 	from_email = settings.EMAIL_HOST_USER
