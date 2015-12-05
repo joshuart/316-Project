@@ -148,16 +148,20 @@ def get_isbn_listings(request, match_isbn):
 		{'all_listings':listings,},
 		context_instance=RequestContext(request))
 
-def get_listings_for_book(request, match_isbn):
+def get_listings_for_book(request, match_isbn, match_title):
 
-	listings = Listing.objects.filter(isbn=match_isbn, active = True, start_time__lte= int(time.time()) - 3)
+	listings = Listing.objects.filter(book_id=match_isbn)
+	if Listing.objects.filter(book_id=match_isbn).count() == 0:
+		return render_to_response('books/no-listings-for-book.html',
+			{'the_title':match_title, 'all_listings':listings,},
+			context_instance=RequestContext(request))
 	return render_to_response('books/listings-for-book.html',
-		{'all_listings':listings,},
-		context_instance=RequestContext(request))
+			{'the_title':match_title, 'all_listings':listings,},
+			context_instance=RequestContext(request))
 
 
 def all_books(request):
-	all_listings = Listing.objects.all()
+	all_listings = Book.objects.raw('Select isbn from books_book')
 	return render_to_response('books/all-books.html',
 		{ 'book_list':all_listings, },
 		context_instance=RequestContext(request))
