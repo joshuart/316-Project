@@ -73,7 +73,7 @@ Your listing of [%s] didn't sell. Welcome to relist your listing at DukeBookTrad
 				Duke Book Trading Team""" %(task_seller_first, task_seller_last,task_listing_title)
 			send_mail(subject, contact_message,from_email, to_email,fail_silently = False)
 
-		elif:
+		else:
 		#sold
 			#email seller:
 			subject1 = "Your listing sold"
