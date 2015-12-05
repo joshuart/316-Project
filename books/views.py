@@ -20,7 +20,7 @@ from django.conf import settings
 
 from django.core.mail import send_mail
 
-
+from .tasks import send_email
 
 
 def index(request):
@@ -170,3 +170,7 @@ def all_books(request):
 def edit_list(request):
 	return HttpResponse("Welcome to the edit-listings page")
 
+'''
+def buy_it_now_click(request):
+	#when someone clicks the buy_it_now button, an email will be sent to both buyer and seller
+'''
