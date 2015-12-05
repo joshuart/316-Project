@@ -147,26 +147,20 @@ def get_isbn_listings(request, match_isbn):
 
 def get_listings_for_book(request, match_isbn, match_title):
 
-<<<<<<< HEAD
-	listings = Listing.objects.filter(book_id=match_isbn, start_time__lte= int(time.time())) #, active = True)
-=======
+
 	listings = Listing.objects.filter(book_id=match_isbn)
 	if Listing.objects.filter(book_id=match_isbn).count() == 0:
 		return render_to_response('books/no-listings-for-book.html',
 			{'the_title':match_title, 'all_listings':listings,},
 			context_instance=RequestContext(request))
->>>>>>> 91e11d20b1c16c573bd89930556b7133a65fba40
 	return render_to_response('books/listings-for-book.html',
 			{'the_title':match_title, 'all_listings':listings,},
 			context_instance=RequestContext(request))
 
 
 def all_books(request):
-<<<<<<< HEAD
 	all_listings = Book.objects.all()
-=======
-	all_listings = Book.objects.raw('Select isbn from books_book')
->>>>>>> 91e11d20b1c16c573bd89930556b7133a65fba40
+
 	return render_to_response('books/all-books.html',
 		{ 'book_list':all_listings, },
 		context_instance=RequestContext(request))
@@ -176,7 +170,7 @@ def all_books(request):
 def edit_list(request):
 	return HttpResponse("Welcome to the edit-listings page")
 
-<<<<<<< HEAD
+
 def buy_book(request, listing_id):
 	listing = Listing.objects.filter(id = listing_id)
 	listing.active = False
@@ -216,7 +210,3 @@ Thank you for purchasing %s at dukebooktrading. The seller is %s %s in %s major.
 
 	return HttpResponse("Okay, we'll let the seller know. Expect to hear back from them soon!")
 
-
-=======
-
->>>>>>> 91e11d20b1c16c573bd89930556b7133a65fba40
