@@ -11,7 +11,13 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 import os
+
+'''
+import djcelery
+djcelery.setup_loader()
+'''
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJ_ROOT = os.path.realpath(
@@ -39,7 +45,7 @@ EMAIL_HOST_USER = 'dukebooktrading@gmail.com'
 EMAIL_HOST_PASSWORD = 'dukecs316'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
+BROKER_URL = "django://"
 
 # Application definition
 
@@ -51,6 +57,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'books',
+    #'djcelery',
+    #'kombu.transport.django',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -141,4 +149,8 @@ STATIC_URL = '/static/'
 # # from django.conf.global_settings import ...
 # execfile(os.path.join(PROJ_ROOT, PROJ_NAME, 'settings_social_auth.py'))
 # execfile(os.path.join(PROJ_ROOT, PROJ_NAME, 'settings_beers.py'))
+
+#CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+
+
 

@@ -1,19 +1,21 @@
 {% extends "books/base.html" %}
 
-{% block heading %}Book Listings{% endblock %}
+{% block heading %} Book Listings for "{{the_title}}" {% endblock %}
 
 {% block content %}
 
 <ul>
 {% for listing in all_listings %}
 <!-- Render a table that is sorted by depart, course, professor, and title -->
-	<li>  {{ listing.seller_email }} {{listing.condition}} {{listing.is_buy_it_now}} {{listing.is_auction}}
+	<li> {{ listing.seller_email }} Book Condition: {{listing.condition}} {{listing.is_buy_it_now}} {{listing.is_auction}}
 		{% ifequal listing.is_buy_it_now  True %} 
 			<a href="{% url 'books.views.buy_book' listing_id=listing.id %}"> Buy now! </a>
 		{% else %}
 			<button type = "button">Auction item!</button>
 		{% endifequal %} 
 	</li>
+{% empty %}
+	<li> Sorry, there are no active listings for this book </li>
 {% endfor %}
 </ul>
 
