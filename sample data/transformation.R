@@ -1,5 +1,6 @@
 #Transform the sample data so that it can be added to the db
 library(random)
+library(plyr)
 
 bid <- read.csv("~/316/project/sample data/bid.txt", stringsAsFactors=FALSE)
 book <- read.csv("~/316/project/sample data/book.txt", comment.char="#", stringsAsFactors=FALSE)
@@ -9,7 +10,7 @@ user <- read.csv("~/316/project/sample data/user_raw.csv", stringsAsFactors=FALS
 listing$id = 1:nrow(listing)
 listing$is_auction = listing$is_auction == 1
 listing$is_buy_it_now = listing$is_buy_it_now == 1
-listing$active = F
+listing$active = T
 
 
 # for (i in 1:nrow(book)){

@@ -9,9 +9,9 @@
 <!-- Render a table that is sorted by depart, course, professor, and title -->
 	<li>  {{ listing.seller_email }} {{listing.condition}} {{listing.is_buy_it_now}} {{listing.is_auction}}
 		{% ifequal listing.is_buy_it_now  True %} 
-			Buy now!
+			<a href="{% url 'books.views.buy_book' listing_id=listing.id %}"> Buy now! </a>
 		{% else %}
-			Auction item!
+			<button type = "button">Auction item!</button>
 		{% endifequal %} 
 	</li>
 {% endfor %}

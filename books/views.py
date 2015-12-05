@@ -31,14 +31,10 @@ def index(request):
 
 
 def register(request):
-	# return HttpResponse("Please finish the registration page")
 	if request.method == 'POST':
 		form = UserCreateForm(request.POST)
 		if form.is_valid():
 			form.save()
-
-
-
 			form_email = form.cleaned_data['email']
 			form_username = form.cleaned_data['username']
 			#form_full_name = form.cleaned_data.get("full_name")
@@ -141,7 +137,7 @@ def navigation(request):
 
 
 def get_isbn_listings(request, match_isbn):
-	listings = Listing.objects.filter(isbn=match_isbn[0])
+	listings = Listing.objects.filter(book_id=match_isbn[0])
 
 
 	return render_to_response('books/listings-for-book.html',
@@ -150,23 +146,26 @@ def get_isbn_listings(request, match_isbn):
 
 def get_listings_for_book(request, match_isbn):
 
-	listings = Listing.objects.filter(isbn=match_isbn, active = True, start_time__lte= int(time.time()) - 3)
+	listings = Listing.objects.filter(book_id=match_isbn, start_time__lte= int(time.time())) #, active = True)
 	return render_to_response('books/listings-for-book.html',
 		{'all_listings':listings,},
 		context_instance=RequestContext(request))
 
 
 def all_books(request):
-	all_listings = Listing.objects.all()
+	all_listings = Book.objects.all()
 	return render_to_response('books/all-books.html',
 		{ 'book_list':all_listings, },
 		context_instance=RequestContext(request))
-	#return HttpResponse("Welcome to the all-books page")
-	# return render_to_response('books/all-books.html',
-	# 	{'books' : Book.objects.all().order)by('course_dept', 'course_num', 'professor', 'title')}, 
-	# 	context_instance = RequestContext(request)) 
+
 
 @login_required(login_url = reverse_lazy('books.views.login'))
 def edit_list(request):
 	return HttpResponse("Welcome to the edit-listings page")
+
+def buy_book(request, listing_id):
+	listing = Listing.objects.filter(id = listing_id)
+	listing.active = False
+	return HttpResponse("Okay, we'll let the seller know. Expect to hear back from them soon!")
+
 
