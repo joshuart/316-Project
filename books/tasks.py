@@ -1,0 +1,104 @@
+from __future__ import absolute_import
+from celery.decorators import task
+from celery.registry import tasks
+from celery.task import Task
+from time import sleep
+from django.core.mail import send_mail
+from django.conf import settings
+
+from django.template.loader import render_to_string
+#from django.utils.html import strip_tags
+
+#from django.core.mail import EmailMultiAlternatives
+from celery import Celery
+
+from celery.task import PeriodicTask
+from datetime import timedelta
+from celery.schedules import crontab
+from celery.task import periodic_task
+'''
+
+@periodic_task(run_every=crontab(minute=0, hour=0))  #Execute daily at midnight.
+def send_email():
+	from_email = settings.EMAIL_HOST_USER
+	#replace the follow pseudo code with real code:
+	#select bids whose listing's start_time is earlier than three days ago but later than four days ago as dying_bids
+	for bid in dying_bids:
+		
+		task_buyer_first = 
+		task_buyer_last = 
+		task_buyer_email = 
+		task_buyer_major = 
+
+		task_seller_first = 
+		task_seller_last =
+		task_seller_email =
+		task_seller_major = 
+
+		task_listing_title = 
+		task_bid_price =
+		task_listing_start_price = 
+
+		#didn't sell
+		if task_bid_price <= task_listing_start_price:
+			subject = "Your listing didn't sell"
+			to_email = task_seller_email
+			contact_message = """Hi %s %s: 
+Your listing of [%s] didn't sell. Welcome to relist your listing at DukeBookTrading.
+
+				Best Wishes,
+				Duke Book Trading Team""" %(task_seller_first, task_seller_last,task_listing_title)
+			send_mail(subject, contact_message,from_email, to_email,fail_silently = False)
+
+		elif:
+		#sold
+			#email seller:
+			subject1 = "Your listing sold"
+			to_email1 = task_seller_email
+			contact_message1 = """Hi %s %s: 
+Your listing of [%s] just sold for %s. The buyer is %s %s in %s major. 
+Please contact the buyer at %s for book delivery.
+
+				Best Wishes,
+				Duke Book Trading Team""" %(task_seller_first, task_seller_last,task_listing_title,task_bid_price, task_buyer_first,task_buyer_last,task_buyer_major,task_buyer_email)
+			send_mail(subject1, contact_message1,from_email, to_email1,fail_silently = False)
+
+
+
+			#email buyer:
+			subject2 = "Thank you for your purchase at DukeBookTrading"
+			to_email2 = task_buyer_email
+			contact_message2 = """Hi %s %s: 
+Thank you for your purchase of [%s]. The seller is %s %s in %s major.
+Please contact the seller at %s for book delivery.
+
+				Best Wishes,
+				Duke Book Trading Team""" %(task_buyer_first, task_buyer_last,task_listing_title, task_seller_first, task_seller_last, task_seller_major, task_seller_email)
+			send_mail(subject2, contact_message2,from_email, to_email2,fail_silently = False)
+
+
+
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # subject, from_email, to = 'Your listing is ending soon!', settings.EMAIL_HOST_USER, 'xiaoxian.wu@duke.edu'
+    # #print("fffff")
+    # contact_message = "XXXXX"
+
+    # #html_content = render_to_string('email_signup.html', {'user': user.full_name})
+    # #text_content = strip_tags(html_content)
+    # msg = EmailMultiAlternatives(subject, contact_message, from_email, [to])
+    # #msg.attach_alternative(html_content, "text/html")
+    # msg.send()
+
