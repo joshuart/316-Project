@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import views
+from django.contrib.auth.models import User
 from django.contrib import auth
 from django import forms
 from django.utils.translation import ugettext_lazy as _
@@ -20,7 +21,8 @@ from django.conf import settings
 
 from django.core.mail import send_mail
 
-#from .tasks import send_email
+#from .tasks import send_email_BIN
+#from .tasks import send_email_bid
 
 
 def index(request):
@@ -97,6 +99,7 @@ def list_submit(request):
 	args = {}
 	if request.method == "POST":
 		listForm = ListBookForm(request.POST)
+		# listForm.fields["Book"].queryset = Book.objects.raw('Select title from Book')
 		if listForm.is_valid():
 			listing = listForm.save(commit = False)
 			listing.seller_email = request.user.email
@@ -151,10 +154,13 @@ def get_listings_for_book(request, match_isbn, match_title):
 			{'the_title':match_title, 'all_listings':listings,},
 			context_instance=RequestContext(request))
 
+def get_bid_info(request, match_listing):
+	return
 
 def all_books(request):
 
 	all_listings = Listing.objects.raw('Select distinct title from listing')
+
 	return render_to_response('books/all-books.html',
 		{ 'book_list':all_listings, },
 		context_instance=RequestContext(request))
@@ -166,8 +172,46 @@ def edit_list(request):
 
 
 def buy_book(request, listing_id):
-	listing = Listing.objects.filter(id = listing_id)
+
+
+
+	listing = Listing.objects.get(id = listing_id)
 	listing.active = False
+
+	#Send email to the seller:
+	form_seller_email = listing.seller_email
+	form_seller_first = User.objects.get(email = form_seller_email).first_name
+	form_seller_last = User.objects.get(email = form_seller_email).last_name
+	#form_seller_major = User.objects.get(email = form_seller_email).major
+
+	form_buyer_email = request.user.email
+	form_buyer_first = request.user.first_name
+	form_buyer_last = request.user.last_name
+	#form_buyer_major = request.user.major
+
+	subject_seller = 'Your listing sold'
+	subject_buyer = 'You just bought a book'
+	from_email = settings.EMAIL_HOST_USER
+	form_title = listing.title
+	contact_message_seller = """Hi %s %s: 
+Your listing of %s just sold. The buyer is %s %s. You can contact the buyer at %s. Thank you.
+
+				Best Wishes,
+				Duke Book Trading Team""" %(form_seller_first, form_seller_last, form_title, form_buyer_first, form_buyer_last, form_buyer_email)
+	send_mail(subject_seller, contact_message_seller,from_email, [form_seller_email],fail_silently = False)
+
+
+	contact_message_buyer = """Hi %s %s: 
+Thank you for purchasing %s at dukebooktrading. The seller is %s %s. You can contact the seller at %s. Thank you.
+
+				Best Wishes,
+				Duke Book Trading Team""" %(form_buyer_first, form_buyer_last, form_title, form_seller_first, form_seller_last, form_seller_email)
+	send_mail(subject_buyer, contact_message_buyer,from_email, [form_buyer_email],fail_silently = False)
+
+
+
+
+
 	return HttpResponse("Okay, we'll let the seller know. Expect to hear back from them soon!")
 '''
 def buy_it_now_click(request):
