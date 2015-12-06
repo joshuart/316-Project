@@ -3,15 +3,15 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
-class Book(models.Model):
-	isbn = models.CharField(max_length = 13, primary_key = True)
-	title = models.CharField(max_length = 200)
-	edition = models.PositiveSmallIntegerField(default = 1, validators = [MinValueValidator(1)])
-	first_author_name = models.CharField(max_length = 200)
-	second_author_name = models.CharField(max_length = 200, blank = True, default = "")
-	third_author_name = models.CharField(max_length = 200, blank = True, default = "")	
-	fourth_author_name = models.CharField(max_length = 200, blank = True, default = "")	
-	fifth_author_name = models.CharField(max_length = 200, blank = True, default = "")
+# class Book(models.Model):
+# 	isbn = models.CharField(max_length = 13, primary_key = True)
+# 	title = models.CharField(max_length = 200)
+# 	edition = models.PositiveSmallIntegerField(default = 1, validators = [MinValueValidator(1)])
+# 	first_author_name = models.CharField(max_length = 200)
+# 	second_author_name = models.CharField(max_length = 200, blank = True, default = "")
+# 	third_author_name = models.CharField(max_length = 200, blank = True, default = "")	
+# 	fourth_author_name = models.CharField(max_length = 200, blank = True, default = "")	
+# 	fifth_author_name = models.CharField(max_length = 200, blank = True, default = "")
 
 
 
@@ -32,7 +32,15 @@ class Listing(models.Model):
 		(NEW, "New"), 
 		)
 
-	book = models.ForeignKey(Book)
+	isbn = models.CharField(max_length = 13, primary_key = False)
+	title = models.CharField(max_length = 200)
+	edition = models.PositiveSmallIntegerField(default = 1, validators = [MinValueValidator(1)])
+	first_author_name = models.CharField(max_length = 200)
+	second_author_name = models.CharField(max_length = 200, blank = True, default = "")
+	third_author_name = models.CharField(max_length = 200, blank = True, default = "")	
+	fourth_author_name = models.CharField(max_length = 200, blank = True, default = "")	
+	fifth_author_name = models.CharField(max_length = 200, blank = True, default = "")
+	
 	start_time = models.IntegerField()
 	seller_email = models.EmailField(max_length = 200)
 	# course_dept = models.CharField(max_length = 8)

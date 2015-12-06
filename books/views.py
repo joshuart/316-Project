@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from books.models import Book, Listing
+from books.models import Listing
 from books.forms import UserCreateForm
 from django.forms.models import ModelForm, inlineformset_factory, modelformset_factory
 from django.contrib.auth import logout as auth_logout
@@ -154,7 +154,7 @@ def get_listings_for_book(request, match_isbn, match_title):
 
 def all_books(request):
 
-	all_listings = Book.objects.raw('Select isbn from books_book')
+	all_listings = Listing.objects.raw('Select distinct title from listing')
 	return render_to_response('books/all-books.html',
 		{ 'book_list':all_listings, },
 		context_instance=RequestContext(request))
