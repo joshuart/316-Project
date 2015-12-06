@@ -135,7 +135,7 @@ def navigation(request):
 
 
 def get_isbn_listings(request, match_isbn):
-	listings = Listing.objects.filter(book_id=match_isbn[0])
+	listings = Listing.objects.filter(book_id=match_isbn[0], active = True, start_time__gte= int(time.time()) - 259200)
 
 
 	return render_to_response('books/listings-for-book.html',
@@ -145,8 +145,8 @@ def get_isbn_listings(request, match_isbn):
 def get_listings_for_book(request, match_isbn, match_title):
 
 
-	listings = Listing.objects.filter(book_id=match_isbn)
-	if Listing.objects.filter(book_id=match_isbn).count() == 0:
+	listings = Listing.objects.filter(book_id=match_isbn, active = True, start_time__gte= int(time.time()) - 259200)
+	if Listing.objects.filter(book_id=match_isbn, active = True, start_time__gte= int(time.time()) - 259200).count() == 0:
 		return render_to_response('books/no-listings-for-book.html',
 			{'the_title':match_title, 'all_listings':listings,},
 			context_instance=RequestContext(request))
