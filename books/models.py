@@ -32,10 +32,10 @@ class Listing(models.Model):
 		(NEW, "New"), 
 		)
 
-	isbn = models.CharField(max_length = 13, primary_key = False)
-	title = models.CharField(max_length = 200)
+	isbn = models.CharField(max_length = 13, primary_key = False, default = "")
+	title = models.CharField(max_length = 200, default = "")
 	edition = models.PositiveSmallIntegerField(default = 1, validators = [MinValueValidator(1)])
-	first_author_name = models.CharField(max_length = 200)
+	first_author_name = models.CharField(max_length = 200, default = "XXX")
 	second_author_name = models.CharField(max_length = 200, blank = True, default = "")
 	third_author_name = models.CharField(max_length = 200, blank = True, default = "")	
 	fourth_author_name = models.CharField(max_length = 200, blank = True, default = "")	
@@ -53,7 +53,7 @@ class Listing(models.Model):
 	buy_it_now_price = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0, validators = [MinValueValidator(0)])
 	start_bid = models.DecimalField(max_digits = 5, decimal_places = 2, default = 0)
 	active = models.BooleanField(default = True)
-	current_bid = models.IntegerField(default = 0) #references
+	#current_bid = models.IntegerField(default = 0) #references
 
 	class Meta:
 		db_table = u'listing'
