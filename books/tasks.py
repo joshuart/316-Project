@@ -22,15 +22,15 @@ from books.models import Listing, Bid
 import time
 import calendar
 
-#periodic_task for listings with buy_it_now function only
+#@periodic_task for listings with buy_it_now function only
 @periodic_task(run_every=crontab(minute=0, hour=0))  #Execute daily at midnight.
 def send_email_BIN():
 	from_email = settings.EMAIL_HOST_USER
 	#replace the follow pseudo code with real code:
 	#select listings in buy_it_now style only with start_time earlier than three days ago but later than four days ago as dying_listings
-	#dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 86400000*3).filter(start_time__gt = calendar.timegm(time.gmtime())- 86400000*4).filter(is_buy_it_now = True).filter(is_auction = False)
+	dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 86400000*3).filter(start_time__gt = calendar.timegm(time.gmtime())- 86400000*4).filter(is_buy_it_now = True).filter(is_auction = False)
 	#just for testing: select listings with start_time ealier than 10 seconds ago but later than 20 seconds ago as dying_listings
-	dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 10000).filter(start_time__gt = calendar.timegm(time.gmtime())- 20000).filter(is_auction = True)
+	#dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 10000).filter(start_time__gt = calendar.timegm(time.gmtime())- 20000).filter(is_auction = True)
 
 
 	for listing in dying_listings:
@@ -46,19 +46,20 @@ Your listing of [%s] didn't sell. Welcome to relist your listing at DukeBookTrad
 
 				Best Wishes,
 				Duke Book Trading Team""" %(task_seller_first, task_seller_last,task_listing_title)
-		send_mail(subject, contact_message,from_email, to_email,fail_silently = False)
+		send_mail(subject, contact_message,from_email, [to_email],fail_silently = False)
 
 
 #periodic_task for listings with bid function (can also be buy_it_now)
-#@periodic_task(run_every=crontab(minute=0, hour=0))  #Execute daily at midnight.
-@periodic_task(run_every=timedelta(seconds=8))  #Execute every 8 seconds.
+@periodic_task(run_every=crontab(minute=0, hour=0))  #Execute daily at midnight.
+#@periodic_task(run_every=timedelta(seconds=8))  #Execute every 8 seconds.
 def send_email_bid():
 	from_email = settings.EMAIL_HOST_USER
 	#replace the follow pseudo code with real code:
 	#select listings with start_time earlier than three days ago but later than four days ago as dying_listings
-	#dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 86400000*3).filter(start_time__gt = calendar.timegm(time.gmtime())- 86400000*4).filter(is_auction = True)
+	dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 86400000*3).filter(start_time__gt = calendar.timegm(time.gmtime())- 86400000*4).filter(is_auction = True)
 	#just for testing: select listings with start_time ealier than 10 seconds ago but later than 20 seconds ago as dying_listings
-	dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 10000).filter(start_time__gt = calendar.timegm(time.gmtime())- 20000).filter(is_auction = True)
+	#dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 10000).filter(start_time__gt = calendar.timegm(time.gmtime())- 20000).filter(is_auction = True)
+	#just_bids = Bid.objects.filter(bid_time_lte = calendar.timegm(time.gmtime()) - 10000).filter(bid_time_gt = calendar.timegm(time.gmtime())- 20000)
 	for listing in dying_listings:
 
 		task_listing_title = Book.objects.get(isbn = listing.book_id).title    #listing.title
@@ -93,7 +94,7 @@ Please contact the buyer at %s for book delivery.
 
 					Best Wishes,
 					Duke Book Trading Team""" %(task_seller_first, task_seller_last,task_listing_title,task_bid_price, task_buyer_first,task_buyer_last,task_buyer_email)
-			send_mail(subject1, contact_message1,from_email, to_email1,fail_silently = False)
+			send_mail(subject1, contact_message1,from_email, [to_email1],fail_silently = False)
 
 
 
@@ -106,7 +107,7 @@ Please contact the seller at %s for book delivery.
 
 					Best Wishes,
 					Duke Book Trading Team""" %(task_buyer_first, task_buyer_last,task_listing_title, task_seller_first, task_seller_last, task_seller_email)
-			send_mail(subject2, contact_message2,from_email, to_email2,fail_silently = False)
+			send_mail(subject2, contact_message2,from_email, [to_email2],fail_silently = False)
 
 
 
@@ -119,4 +120,35 @@ Please contact the seller at %s for book delivery.
     # msg = EmailMultiAlternatives(subject, contact_message, from_email, [to])
     # #msg.attach_alternative(html_content, "text/html")
     # msg.send()
+
+
+
+
+
+
+@periodic_task(run_every=timedelta(seconds=8))  #Execute every 8 seconds.
+def send_email_demo_only():
+	from_email = settings.EMAIL_HOST_USER
+	#replace the follow pseudo code with real code:
+	#select listings with start_time earlier than three days ago but later than four days ago as dying_listings
+	#dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 86400000*3).filter(start_time__gt = calendar.timegm(time.gmtime())- 86400000*4).filter(is_auction = True)
+	#just for testing: select listings with start_time ealier than 10 seconds ago but later than 20 seconds ago as dying_listings
+	#dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 10000).filter(start_time__gt = calendar.timegm(time.gmtime())- 20000).filter(is_auction = True)
+	just_bids = Bid.objects.filter(bid_time_lte = calendar.timegm(time.gmtime()) - 10000).filter(bid_time_gt = calendar.timegm(time.gmtime())- 20000)
+	for bid in just_bids:
+		email = bid.bidder_email
+
+		subject2 = "Thank you for your bidding"
+		to_email2 = email
+		contact_message2 = """Hi: 
+Thank you for your bidding.
+
+					Best Wishes,
+					Duke Book Trading Team"""
+		send_mail(subject2, contact_message2,from_email, [to_email2],fail_silently = False)
+		
+
+
+
+
 
