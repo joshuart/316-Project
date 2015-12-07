@@ -135,7 +135,7 @@ def navigation(request):
 
 
 def get_isbn_listings(request, match_isbn):
-	listings = Listing.objects.filter(book_id=match_isbn[0], active = True, start_time__gte= int(time.time()) - 259200)
+	listings = Listing.objects.filter(isbn=match_isbn[0], active = True, start_time__gte= int(time.time()) - 259200)
 
 
 	return render_to_response('books/listings-for-book.html',
@@ -145,8 +145,8 @@ def get_isbn_listings(request, match_isbn):
 def get_listings_for_book(request, match_isbn, match_title):
 
 
-	listings = Listing.objects.filter(book_id=match_isbn, active = True, start_time__gte= int(time.time()) - 259200)
-	if Listing.objects.filter(book_id=match_isbn, active = True, start_time__gte= int(time.time()) - 259200).count() == 0:
+	listings = Listing.objects.filter(isbn=match_isbn, active = True, start_time__gte= int(time.time()) - 259200)
+	if Listing.objects.filter(isbn=match_isbn, active = True, start_time__gte= int(time.time()) - 259200).count() == 0:
 		return render_to_response('books/no-listings-for-book.html',
 			{'the_title':match_title, 'all_listings':listings,},
 			context_instance=RequestContext(request))
@@ -159,7 +159,7 @@ def get_bid_info(request, match_listing):
 
 def all_books(request):
 
-	all_listings = Listing.objects.raw('Select distinct title from listing')
+	all_listings = Listing.objects.raw('Select distinct title, id from listing')
 
 	return render_to_response('books/all-books.html',
 		{ 'book_list':all_listings, },
@@ -192,7 +192,8 @@ def buy_book(request, listing_id):
 	subject_seller = 'Your listing sold'
 	subject_buyer = 'You just bought a book'
 	from_email = settings.EMAIL_HOST_USER
-	form_title = listing.title
+	#form_title = listing.title
+	form_title = Book.objects.get(isbn = listing.book_id).title
 	contact_message_seller = """Hi %s %s: 
 Your listing of %s just sold. The buyer is %s %s. You can contact the buyer at %s. Thank you.
 
