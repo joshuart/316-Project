@@ -7,11 +7,11 @@
 <ul>
 {% for listing in all_listings %}
 <!-- Render a table that is sorted by depart, course, professor, and title -->
-	<li> Active? {{listing.active}} Book Condition: {{listing.condition}}
+	<li> Book Condition: {{listing.condition}}	Description: {{listing.description}}
 		{% ifequal listing.is_buy_it_now  True %} 
 			<a href="{% url 'books.views.buy_book' listing_id=listing.id %}"> Buy now for ${{listing.buy_it_now_price}}! </a>
 		{% endifequal %}
-	
+
 		{% ifequal listing.is_auction True %}
 				<a href="{% url 'books.views.get_bid_info' listing_id=listing.id %}"> Go make a bid! </a>
 		{% endifequal %} 

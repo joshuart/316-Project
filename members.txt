@@ -1,4 +1,4 @@
-Daniel MacDonald - completed the all-books page and created the bidding pages
+Daniel MacDonald - completed the all-books page, listings pages, and created the bidding pages. Some other front-end work.
  Joshua Taylor -  Completed forms to register users and list books and created the book form page. 
 Tianyi Wang - Created task manager program to notify buyers and sellers of changes regarding their listings. 
 Xiaoxian Wu - Created sample data and managed the web database.
