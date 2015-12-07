@@ -12,7 +12,12 @@ class Book(models.Model):
 	third_author_name = models.CharField(max_length = 200, blank = True, default = "")	
 	fourth_author_name = models.CharField(max_length = 200, blank = True, default = "")	
 	fifth_author_name = models.CharField(max_length = 200, blank = True, default = "")
-
+	
+	class Meta:
+		ordering = ['title']
+		
+	def __unicode__(self):
+		return '%s, edition: %s, author: %s' % (self.title, self.edition, self.first_author_name)  
 
 
 class Listing(models.Model):
@@ -86,5 +91,6 @@ class Bid(models.Model):
 
 # References used:
 # http://stackoverflow.com/questions/18992847/best-way-to-reference-the-user-model-in-django-1-5
-		
+# http://stackoverflow.com/questions/6541477/ordering-choices-in-modelform-manytomanyfield-django
+# http://stackoverflow.com/questions/25599568/make-model-unicode-method-return-to-multiple-colums		
 		

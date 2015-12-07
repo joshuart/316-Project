@@ -104,7 +104,8 @@ def list_submit(request):
 	args = {}
 	if request.method == "POST":
 		listForm = ListBookForm(request.POST)
-		# listForm.fields["Book"].queryset = Book.objects.raw('Select title from Book')
+		listForm.fields["Book"] = forms.ModelChoiceField(Book.objects.order_by('title'))
+		
 		if listForm.is_valid():
 			listing = listForm.save(commit = False)
 			listing.seller_email = request.user.email
