@@ -31,8 +31,17 @@ class Listing(models.Model):
 		(EXCELLENT, "Excellent"),
 		(NEW, "New"), 
 		)
+
+	#book_id = models.CharField(max_length = 13, primary_key = False, default = "")
+	#title = models.CharField(max_length = 200, default = "")
+	#edition = models.PositiveSmallIntegerField(default = 1, validators = [MinValueValidator(1)])
+	#first_author_name = models.CharField(max_length = 200, default = "")
+	#second_author_name = models.CharField(max_length = 200, blank = True, default = "")
+	#third_author_name = models.CharField(max_length = 200, blank = True, default = "")	
+	#fourth_author_name = models.CharField(max_length = 200, blank = True, default = "")	
+	#fifth_author_name = models.CharField(max_length = 200, blank = True, default = "")
 	
-	book = models.ForeignKey(Book) 	
+	book = models.ForeignKey(Book, default = "")
 	start_time = models.IntegerField()
 	seller_email = models.EmailField(max_length = 200)
 	# course_dept = models.CharField(max_length = 8)
