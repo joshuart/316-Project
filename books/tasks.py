@@ -22,8 +22,8 @@ from books.models import Listing, Bid
 import time
 import calendar
 
-@periodic_task for listings with buy_it_now function only
-#@periodic_task(run_every=crontab(minute=0, hour=0))  #Execute daily at midnight.
+#@periodic_task for listings with buy_it_now function only
+@periodic_task(run_every=crontab(minute=0, hour=0))  #Execute daily at midnight.
 def send_email_BIN():
 	from_email = settings.EMAIL_HOST_USER
 	#replace the follow pseudo code with real code:
