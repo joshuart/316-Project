@@ -48,7 +48,7 @@ listing = listing[listingVars]
 book <- subset(book, !duplicated(book$ISBN) )
 book$second_author_name = book$third_author_name = book$fourth_author_name = book$fifth_author_name = ""
 book = plyr::rename(book, replace = c(author = "first_author_name"))
-bookVars = c("edition", "ISBN", "title", "fifth_author_name", "fourth_author_name", "second_author_name",
+bookVars = c("ISBN", "edition", "title", "fifth_author_name", "fourth_author_name", "second_author_name",
              "first_author_name", "third_author_name")
 book = book[bookVars]
 book$first_author_name = iconv(book$first_author_name, from="latin1", to = "ASCII", sub = "")
@@ -74,19 +74,19 @@ userVars = c("id", "password", "last_login", "is_superuser", "first_name", "last
 user = user[userVars]
 
 listingKeep = c("id", "start_time", "condition", "is_auction", "is_buy_it_now", "description", 
-                "buy_it_now_price", "seller_email", "start_bid", "active", "title", "book_id")
+                "buy_it_now_price", "seller_email", "start_bid", "active", "book_id")
 listing = listing[listingKeep]
 listing = listing[1:1038,]
 
 
-listing_book = merge(listing, book, by.x = c("book_id","title"), by.y = c("ISBN","title"), all.x = TRUE)
-listing_book = plyr::rename(listing_book, replace = c(book_id = "isbn"))
-listing_book_Keep = c("id", "start_time", "condition", "is_auction", "is_buy_it_now", "description", "buy_it_now_price", "seller_email", "start_bid", "active", "edition", "fifth_author_name", "first_author_name", "fourth_author_name", "isbn", "second_author_name", "third_author_name", "title")
+#listing_book = merge(listing, book, by.x = c("book_id","title"), by.y = c("ISBN","title"), all.x = TRUE)
+#listing_book = plyr::rename(listing_book, replace = c(book_id = "isbn"))
+#listing_book_Keep = c("id", "start_time", "condition", "is_auction", "is_buy_it_now", "description", "buy_it_now_price", "seller_email", "start_bid", "active", "edition", "fifth_author_name", "first_author_name", "fourth_author_name", "isbn", "second_author_name", "third_author_name", "title")
 
 
-listing_book = listing_book[listing_book_Keep]
+#listing_book = listing_book[listing_book_Keep]
 
 write.table(bid, "/Users/Administrator/Desktop/COMPSCI316/AmazonVM/Project/sample_R_output/bid.csv", row.names=FALSE, col.names=FALSE, sep=",")
-#write.table(book, "/Users/Administrator/Desktop/COMPSCI316/AmazonVM/Project/sample_R_output/book.csv", row.names=FALSE, col.names=FALSE, sep=",")
-write.table(listing_book, "/Users/Administrator/Desktop/COMPSCI316/AmazonVM/Project/sample_R_output/listing.csv", row.names=FALSE, col.names=FALSE, sep=",")
+write.table(book, "/Users/Administrator/Desktop/COMPSCI316/AmazonVM/Project/sample_R_output/book.csv", row.names=FALSE, col.names=FALSE, sep=",")
+write.table(listing, "/Users/Administrator/Desktop/COMPSCI316/AmazonVM/Project/sample_R_output/listing.csv", row.names=FALSE, col.names=FALSE, sep=",")
 write.table(user, "/Users/Administrator/Desktop/COMPSCI316/AmazonVM/Project/sample_R_output/user.csv", row.names=FALSE, col.names=FALSE, sep=",")
