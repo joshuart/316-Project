@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
@@ -84,6 +83,12 @@ class ListBookForm(ModelForm):
 		}
 
 
+class BookForm(ModelForm):
+	class Meta:
+		model = Book
+		fields = '__all__'
+
+
 
 
 @login_required(login_url = reverse_lazy('books.views.login'))
@@ -125,6 +130,25 @@ Thank you for listing at dukebooktrading. Your listing of %s has been posted. Th
 		listForm = ListBookForm()
 	args['ListBookForm'] = listForm
 	return render(request, 'books/list.html', args)
+
+def book(request):
+	return render_to_response('books/book.html',
+        { 'BookForm' : BookForm(),},
+        context_instance=RequestContext(request))
+
+
+def book_submit(request):
+	args = {}
+		if request.method == "POST":
+			bookForm = BookForm(request.POST)
+			if bookForm.is_valid():
+				book = bookForm.save(commit = False)
+				book.save()
+				return HttpResponseRedirect(reverse('books.views.list'))
+		else:
+			bookForm = BookForm()
+		args['BookForm'] = bookForm
+		return render(request, 'books/book.html', args)
 
 
 
