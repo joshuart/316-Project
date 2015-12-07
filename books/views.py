@@ -139,16 +139,16 @@ def book(request):
 
 def book_submit(request):
 	args = {}
-		if request.method == "POST":
-			bookForm = BookForm(request.POST)
-			if bookForm.is_valid():
-				book = bookForm.save(commit = False)
-				book.save()
-				return HttpResponseRedirect(reverse('books.views.list'))
-		else:
-			bookForm = BookForm()
-		args['BookForm'] = bookForm
-		return render(request, 'books/book.html', args)
+	if request.method == "POST":
+		bookForm = BookForm(request.POST)
+		if bookForm.is_valid():
+			book = bookForm.save(commit = False)
+			book.save()
+			return HttpResponseRedirect(reverse('books.views.list'))
+	else:
+		bookForm = BookForm()
+	args['BookForm'] = bookForm
+	return render(request, 'books/book.html', args)
 
 
 
