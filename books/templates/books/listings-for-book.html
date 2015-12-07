@@ -10,8 +10,8 @@
 	<li> {{ listing.seller_email }} Book Condition: {{listing.condition}} Buy? {{listing.is_buy_it_now}} Auction? {{listing.is_auction}} \n
 		{% ifequal listing.is_buy_it_now  True %} 
 			<a href="{% url 'books.views.buy_book' listing_id=listing.id %}"> Buy now for ${{listing.buy_it_now_price}}! </a>
-		{% else %}
-			<button type = "button">Auction item!</button>
+		{% endifequal %}
+		{% ifequal listing.is_auction True %}
 			<a href="{% url 'books.views.get_bid_info' listing_id=listing.id %}"> Go make a bid! </a>
 		{% endifequal %} 
 	</li>
