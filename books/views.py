@@ -117,7 +117,7 @@ def list_submit(request):
 			form_username = request.user.username
 			subject = 'Your listing has been posted.'
 			from_email = settings.EMAIL_HOST_USER
-			form_title = listForm.cleaned_data['title']
+			form_title = listForm.cleaned_data['Book']
 			to_email = [form_email]
 			contact_message = """Hi %s: 
 Thank you for listing at dukebooktrading. Your listing of %s has been posted. Thank you.
