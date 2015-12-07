@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from books.models import Listing
+from books.models import Listing, Bid
 from books.forms import UserCreateForm
 from django.forms.models import ModelForm, inlineformset_factory, modelformset_factory
 from django.contrib.auth import logout as auth_logout
@@ -145,17 +145,32 @@ def get_isbn_listings(request, match_isbn):
 def get_listings_for_book(request, match_isbn, match_title):
 
 
-	listings = Listing.objects.filter(isbn=match_isbn, active = True, start_time__gte= int(time.time()) - 259200)
-	if Listing.objects.filter(isbn=match_isbn, active = True, start_time__gte= int(time.time()) - 259200).count() == 0:
-		return render_to_response('books/no-listings-for-book.html',
-			{'the_title':match_title, 'all_listings':listings,},
-			context_instance=RequestContext(request))
+	listings = Listing.objects.filter(isbn=match_isbn)#, active = True, start_time__gte= int(time.time()) - 259200)
+#	if Listing.objects.filter(isbn=match_isbn, active = True, start_time__gte= int(time.time()) - 259200).count() == 0:
+#		return render_to_response('books/no-listings-for-book.html',
+#			{'the_title':match_title, 'all_listings':listings,},
+#			context_instance=RequestContext(request))
 	return render_to_response('books/listings-for-book.html',
 			{'the_title':match_title, 'all_listings':listings,},
 			context_instance=RequestContext(request))
 
-def get_bid_info(request, match_listing):
-	return
+
+def get_bid_info(request, listing_id):
+	the_bid = Bid.objects.filter(listing=listing_id)
+	return render_to_response('books/make-bid.html',
+		{'listing_id':listing_id, 'theBid':the_bid},
+		context_instance=RequestContext(request))
+
+def edit_bid(request, listing_id):
+	the_bid = Bid.objects.get(listing=listing_id)
+	the_bid.bid_price = the_bid.bid_price + 1
+	the_bid.bid_time = int(time.time())
+	the_bid.bidder_email = request.user.email
+	the_bid.save()
+	#return HttpResponse("Bid recorded. We'll let the seller know if you win the auction.")
+	return render_to_response('books/bid-made.html',
+		{},
+		context_instance=RequestContext(request))
 
 def all_books(request):
 

@@ -1,0 +1,13 @@
+{% extends "books/base.html" %}
+
+{% block heading %}Bid information{% endblock %}
+
+{% block content %}
+
+<ul>
+{%for bid in theBid %}
+	Current bid is ${{bid.bid_price}}. To bid $1.00 higher click <a href="{% url 'books.views.edit_bid' listing_id=bid.listing_id %}"> here! </a>
+{%endfor%}
+</ul>
+
+{% endblock %}
