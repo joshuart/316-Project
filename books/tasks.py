@@ -37,7 +37,7 @@ def send_email_BIN():
 		task_seller_email = listing.seller_email
 		task_seller_first = User.objects.get(email = task_seller_email).first_name
 		task_seller_last = User.objects.get(email = task_seller_email).last_name
-		task_listing_title = listing.title
+		task_listing_title = Book.objects.get(isbn = listing.book_id).title   #listing.title
 
 		subject = "Your listing didn't sell"
 		to_email = task_seller_email
@@ -61,7 +61,7 @@ def send_email_bid():
 	dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 10000).filter(start_time__gt = calendar.timegm(time.gmtime())- 20000).filter(is_auction = True)
 	for listing in dying_listings:
 
-		task_listing_title = listing.title
+		task_listing_title = Book.objects.get(isbn = listing.book_id).title    #listing.title
 		task_seller_email = listing.seller_email
 		task_seller_first = User.objects.get(email = task_seller_email).first_name
 		task_seller_last = User.objects.get(email = task_seller_email).last_name
