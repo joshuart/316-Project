@@ -88,7 +88,12 @@ class BookForm(ModelForm):
 		model = Book
 		fields = '__all__'
 
-
+class BidForm(ModelForm):
+	"""docstring for BidForm"""
+	class Meta:
+		model = Bid
+		fields = '__all__'
+		
 
 
 @login_required(login_url = reverse_lazy('books.views.login'))
@@ -112,6 +117,16 @@ def list_submit(request):
 			listing.start_time = int(time.time())
 			listing.active = True
 			listing.save()
+
+			if listing.is_auction == True:
+				bid = Bid(listing_id = listing.id, bid_price = listing.start_bid, bidder_email = request.user.email, bid_time = int(time.time()))
+				# bidForm = BidForm()
+				# bidForm.bid_time = int(time.time())
+				# bidForm.bid_price = listing.start_bid
+				# bidForm.bidder_email = request.user.email
+				# bidForm.listing_id = listing.id
+				# bidForm.save()
+				bid.save()
 
 			form_email = request.user.email
 			form_username = request.user.username
@@ -144,6 +159,7 @@ def book_submit(request):
 		bookForm = BookForm(request.POST)
 		if bookForm.is_valid():
 			book = bookForm.save(commit = False)
+			#book1 = Book(isbn = book.isbn, title = book.title, edition = book.edition, first_author_name = book.first_author_name, second_author_name = book.second_author_name) 
 			book.save()
 			return HttpResponseRedirect(reverse('books.views.list'))
 	else:
@@ -217,8 +233,9 @@ def buy_book(request, listing_id):
 
 
 
-	listing = Listing.objects.get(id = listing_id)
-	listing.active = False
+	listing = Listing.objects.get(id = listing_id).update(active = False)
+	#listing.active = False
+	listing.save()
 
 	#Send email to the seller:
 	form_seller_email = listing.seller_email
