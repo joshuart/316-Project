@@ -1,5 +1,4 @@
-Daniel MacDonald - started working on the all-books view for the website
-Joshua Taylor - I completed forms to register users and list books. 
-Tianyi Wang - revised the ER design and wrote the sql code to create the databases
-Xiaoxian Wu - scraped sample data to use in the website and contributed codes to create the databases 
-  
+Daniel MacDonald - completed the all-books page and created the bidding pages
+ Joshua Taylor -  Completed forms to register users and list books and created the book form page. 
+Tianyi Wang - Created task manager program to notify buyers and sellers of changes regarding their listings. 
+Xiaoxian Wu - Created sample data and loaded it into the website.

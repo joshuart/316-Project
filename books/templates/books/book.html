@@ -4,13 +4,11 @@
 {% block login %}{% endblock %}
 {% block content %}
 		<h4> Among the authors' names fields only the 1st author's last name is required</h4>
-		<h4> Only fill in starting bid/ buy it now price if you have designated that option </h4>
 		<form class="form" method = "post" action="{% url 'books.views.list_submit' %}">
 		{% csrf_token %}
 		<p>
-		{{ListBookForm}}
+		{{BookForm}}
 		</p>
-		<li><a href="{% url 'books.views.book' %}">Don't see the book you're looking for? Click here to add it</a></li>
 		<input type="reset" value="Reset"/>
 		<input type="submit" value="Submit Update"/>
 		</form> 

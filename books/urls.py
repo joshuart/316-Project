@@ -29,7 +29,7 @@ urlpatterns = patterns('books.views',
     url(r'^buy-book/listing/(?P<listing_id>[-\w\ ])', 'buy_book'),
     url(r'^bid-for-book/listing/(?P<listing_id>[-\w\ ]+)', 'get_bid_info'),
     url(r'^bid-for-book/bid-made/(?P<listing_id>[-\w\ ]+)', 'edit_bid'),
-    #/(?P<listing_id>[-\w\ ]+)
+    url(r'^add-book$', 'book'),
     #url(r'^redirect$', 'redirect'),
 
 

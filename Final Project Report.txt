@@ -1,0 +1,9 @@
+Project Description: Textbook Exchange
+
+For our project, we designed a database-backed textbook exchange that simplifies buying and selling textbooks for Duke students. Currently, a Facebook page is how most Duke students exchange textbooks and comparisons have to be done manually. Our application lists all available prices for the desired books in one spot, making for a far more convenient experience.
+
+There are two different types of sales. The first option, buy-it-now, gives users a price at which they can immediately purchase it. The second option is auction-style, where potential buyers make bids of increasingly higher prices (like Ebay). The seller has the option to choose either approach for selling or can even use both. If using both, then bids are allowed but anyone can end the auction by meeting the buy-it-now price.
+
+Regardless of the sale type, once a buyer has been found (i.e. auction is expired or buy-it-now price is met) for the book, the seller is notified and given the agreed upon price and the email of the buyer so they can discuss when/where to make the exchange. At this point our application is no longer of use to them for this particular book. 
+
+For our web interface, the main page contains two buttons, which direct users towards the spots for listing books and buying books.

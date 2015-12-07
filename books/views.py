@@ -1,10 +1,9 @@
 from django.shortcuts import render
-
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from books.models import Listing, Bid
+from books.models import Listing, Bid, Book
 from books.forms import UserCreateForm
 from django.forms.models import ModelForm, inlineformset_factory, modelformset_factory
 from django.contrib.auth import logout as auth_logout
@@ -84,6 +83,12 @@ class ListBookForm(ModelForm):
 		}
 
 
+class BookForm(ModelForm):
+	class Meta:
+		model = Book
+		fields = '__all__'
+
+
 
 
 @login_required(login_url = reverse_lazy('books.views.login'))
@@ -99,7 +104,8 @@ def list_submit(request):
 	args = {}
 	if request.method == "POST":
 		listForm = ListBookForm(request.POST)
-		# listForm.fields["Book"].queryset = Book.objects.raw('Select title from Book')
+		listForm.fields["Book"] = forms.ModelChoiceField(Book.objects.order_by('title'))
+		
 		if listForm.is_valid():
 			listing = listForm.save(commit = False)
 			listing.seller_email = request.user.email
@@ -126,6 +132,25 @@ Thank you for listing at dukebooktrading. Your listing of %s has been posted. Th
 	args['ListBookForm'] = listForm
 	return render(request, 'books/list.html', args)
 
+def book(request):
+	return render_to_response('books/book.html',
+        { 'BookForm' : BookForm(),},
+        context_instance=RequestContext(request))
+
+
+def book_submit(request):
+	args = {}
+	if request.method == "POST":
+		bookForm = BookForm(request.POST)
+		if bookForm.is_valid():
+			book = bookForm.save(commit = False)
+			book.save()
+			return HttpResponseRedirect(reverse('books.views.list'))
+	else:
+		bookForm = BookForm()
+	args['BookForm'] = bookForm
+	return render(request, 'books/book.html', args)
+
 
 
 def navigation(request):
@@ -145,7 +170,7 @@ def get_isbn_listings(request, match_isbn):
 def get_listings_for_book(request, match_isbn, match_title):
 
 
-	listings = Listing.objects.filter(isbn=match_isbn)#, active = True, start_time__gte= int(time.time()) - 259200)
+	listings = Listing.objects.filter(book_id=match_isbn)#, active = True, start_time__gte= int(time.time()) - 259200)
 #	if Listing.objects.filter(isbn=match_isbn, active = True, start_time__gte= int(time.time()) - 259200).count() == 0:
 #		return render_to_response('books/no-listings-for-book.html',
 #			{'the_title':match_title, 'all_listings':listings,},
@@ -155,12 +180,14 @@ def get_listings_for_book(request, match_isbn, match_title):
 			context_instance=RequestContext(request))
 
 
+
 def get_bid_info(request, listing_id):
 	the_bid = Bid.objects.filter(listing=listing_id)
 	return render_to_response('books/make-bid.html',
 		{'listing_id':listing_id, 'theBid':the_bid},
 		context_instance=RequestContext(request))
 
+@login_required(login_url = reverse_lazy('books.views.login'))
 def edit_bid(request, listing_id):
 	the_bid = Bid.objects.get(listing=listing_id)
 	the_bid.bid_price = the_bid.bid_price + 1
@@ -174,7 +201,7 @@ def edit_bid(request, listing_id):
 
 def all_books(request):
 
-	all_listings = Listing.objects.raw('Select distinct title, id from listing')
+	all_listings = Book.objects.raw('Select distinct title, isbn from books_book')
 
 	return render_to_response('books/all-books.html',
 		{ 'book_list':all_listings, },
