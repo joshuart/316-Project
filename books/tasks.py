@@ -18,7 +18,7 @@ from datetime import timedelta
 from celery.schedules import crontab
 from celery.task import periodic_task
 
-from books.models import Listing, Bid
+from books.models import Listing, Bid, Book
 import time
 import calendar
 
@@ -126,7 +126,7 @@ Please contact the seller at %s for book delivery.
 
 
 
-@periodic_task(run_every=timedelta(seconds=8))  #Execute every 8 seconds.
+@periodic_task(run_every=timedelta(seconds=5))  #Execute every 5 seconds.
 def send_email_demo_only():
 	from_email = settings.EMAIL_HOST_USER
 	#replace the follow pseudo code with real code:
@@ -134,19 +134,27 @@ def send_email_demo_only():
 	#dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 86400000*3).filter(start_time__gt = calendar.timegm(time.gmtime())- 86400000*4).filter(is_auction = True)
 	#just for testing: select listings with start_time ealier than 10 seconds ago but later than 20 seconds ago as dying_listings
 	#dying_listings = Listing.objects.filter(start_time__lte = calendar.timegm(time.gmtime()) - 10000).filter(start_time__gt = calendar.timegm(time.gmtime())- 20000).filter(is_auction = True)
-	just_bids = Bid.objects.filter(bid_time_lte = calendar.timegm(time.gmtime()) - 10000).filter(bid_time_gt = calendar.timegm(time.gmtime())- 20000)
+	#send_mail("Great!", "Yes!",from_email, ["tw159@duke.edu"],fail_silently = False)
+	
+	#just_bids = Bid.objects.filter(bid_time__lte = calendar.timegm(time.gmtime()) - 10000).filter(bid_time__gt = calendar.timegm(time.gmtime())- 20000)
+	just_bids = Bid.objects.filter(bidder_email = "tw159@duke.edu").filter(bid_time__gt = calendar.timegm(time.gmtime()) - 5000)
 	for bid in just_bids:
 		email = bid.bidder_email
+		bid_listing_id = bid.listing_id
+		task_listing = Listing.objects.get(id = bid_listing_id)
+		book = Book.objects.get(isbn = task_listing.book_id)
+		title = book.title
+		price = bid.bid_price
 
 		subject2 = "Thank you for your bidding"
 		to_email2 = email
 		contact_message2 = """Hi: 
-Thank you for your bidding.
+Thank you for your bidding on %s for the price of %s.
 
 					Best Wishes,
-					Duke Book Trading Team"""
+					Duke Book Trading Team"""%(title,price)
 		send_mail(subject2, contact_message2,from_email, [to_email2],fail_silently = False)
-		
+	
 
 
 
