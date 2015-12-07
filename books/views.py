@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from books.models import Listing
+from books.models import Listing, Book
 from books.forms import UserCreateForm
 from django.forms.models import ModelForm, inlineformset_factory, modelformset_factory
 from django.contrib.auth import logout as auth_logout
