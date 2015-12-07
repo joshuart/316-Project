@@ -139,13 +139,13 @@ def send_email_demo_only():
 		email = bid.bidder_email
 
 		subject2 = "Thank you for your bidding"
-			to_email2 = email
-			contact_message2 = """Hi: 
+		to_email2 = email
+		contact_message2 = """Hi: 
 Thank you for your bidding.
 
 					Best Wishes,
 					Duke Book Trading Team"""
-			send_mail(subject2, contact_message2,from_email, [to_email2],fail_silently = False)
+		send_mail(subject2, contact_message2,from_email, [to_email2],fail_silently = False)
 		
 
 
